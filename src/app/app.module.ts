@@ -1,3 +1,4 @@
+import { environment } from './../environments/environment.development';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { NgModule } from '@angular/core';
@@ -25,6 +26,7 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatSelectModule} from '@angular/material/select';
 import {MatListModule} from '@angular/material/list';
 
+fetch(environment.apiUrl);
 
 
 @NgModule({
@@ -35,7 +37,8 @@ import {MatListModule} from '@angular/material/list';
     TutorialsListComponent,
     Landing,
     LoginComponent,
-    Principal
+    Principal,
+
   ],
   imports: [
     BrowserModule,
@@ -54,7 +57,8 @@ import {MatListModule} from '@angular/material/list';
     MatCardModule,
     MatProgressBarModule,
     MatSelectModule,
-    MatListModule
+    MatListModule,
+
   ],
   exports: [MatButtonModule,FormsModule],
   providers: [

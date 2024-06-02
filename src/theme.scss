@@ -1,15 +1,49 @@
-//@import '@angular/material/theming';
-//@include mat-core();
-//@use '~@angular/material' as mat; 
+@use '@angular/material' as mat;
+@use '@angular/material-experimental' as matx;
 
-$my-app-primary: mat-palette($mat-blue-grey);
-$my-app-accent:  mat-palette($mat-pink, 500, 900, A100);
-$my-app-warn:    mat-palette($mat-deep-orange);
-$my-app-theme: mat-light-theme($my-app-primary, $my-app-accent, $my-app-warn);
-@include angular-material-theme($my-app-theme);
-.alternate-theme {
-  $alternate-primary: mat-palette($mat-light-blue);
-  $alternate-accent:  mat-palette($mat-yellow, 400);
-  $alternate-theme: mat-light-theme($alternate-primary, $alternate-accent);
-  @include angular-material-theme($alternate-theme);
+$m3-dark-theme: matx.define-theme(
+  (
+    color: (
+      theme-type: dark,
+      primary: matx.$m3-indigo-palette,
+      tertiary: matx.$m3-blue-palette,
+    ),
+  )
+);
+
+$m3-light-theme: matx.define-theme(
+  (
+    color: (
+      primary: matx.$m3-indigo-palette,
+      tertiary: matx.$m3-blue-palette,
+    ),
+  )
+);
+@include mat.core();
+@include matx.color-variants-back-compat($m3-light-theme);
+
+.dark-theme {
+  @include mat.all-component-themes($m3-dark-theme);
 }
+
+.light-theme {
+  @include mat.all-component-themes($m3-light-theme);
+}
+:root {
+  @include mat.all-component-themes($m3-light-theme);
+}
+
+// @use '@angular/material' as mat;
+// @use '@angular/material-experimental' as matx;
+
+// $theme: matx.define-theme((
+//   color: (
+//     theme-type: light,
+//     primary: matx.$m3-azure-palette,
+//     tertiary: matx.$m3-blue-palette,
+//   )
+// ));
+
+// :root {
+//   @include mat.all-component-themes($theme);
+// }

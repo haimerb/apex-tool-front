@@ -2,3 +2,34 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.footer{
+  margin-top: 2rem;
+  background-color: #282c34;
+  min-height: 6rem;
+  color: aliceblue;
+}
+
+/* mat-button.mat-primary,
+.mat-raised-button.mat-primary {
+  background-color: #0171bb;
+  color: #fff;
+  } */
+
+
+/* .mat-primary
+{
+    background-color: #282c34;
+} */
+
+
+
+
+  /* .mat-raised-button.mat-success,
+.mat-flat-button.mat-success,
+.mat-fab.mat-success,
+.mat-mini-fab.mat-success {
+  color: #f0fff3;
+  background-color: #0171bb;
+} */
+
+

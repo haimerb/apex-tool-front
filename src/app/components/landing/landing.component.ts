@@ -1,3 +1,4 @@
+import { StorageService } from './../../services/storage.service';
 import { Component, OnInit } from '@angular/core';
 //import { Tutorial } from 'src/app/models/tutorial.model';
 //import { TutorialService } from 'src/app/services/tutorial.service';
@@ -18,20 +19,24 @@ import { Router } from '@angular/router';
   templateUrl: './landing.component.html',
   styleUrls: ['./landing.component.css'],
 })
-export class Landing
-//implements OnInit
+export class Landing implements OnInit
 {
   //tutorials?: Tutorial[];
   //currentTutorial: Tutorial = {};
   currentIndex = -1;
   title = '';
   constructor(
-    //private tutorialService: TutorialService,
+    private storageService:StorageService,
     private router: Router) {}
-
-  // ngOnInit(): void {
-  //   this.retrieveTutorials();
-  // }
+  isLoggedIn = false;
+  ngOnInit(): void {
+    //this.retrieveTutorials();
+    if (this.storageService.isLoggedIn()) {
+      this.isLoggedIn = true;
+      //this.roles = this.storageService.getUser().roles;
+      this.router.navigate(['/principal']);
+    }
+  }
 
   // goToVotes($myParam: string = ''): void {
   //   const navigationDetails: string[] = ['/votes'];
