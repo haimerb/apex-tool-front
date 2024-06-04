@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 const USER_KEY = 'auth-user';
+const STATE_KEY = 'state';
 
 @Injectable({
   providedIn: 'root'
@@ -34,4 +35,17 @@ export class StorageService {
 
     return false;
   }
+
+  public statePrincipal(): string {
+    const state = window.sessionStorage.getItem(STATE_KEY);
+    if(state){
+      return state;
+    }
+    return "";
+  }
+
+public setStatePrincipal(state :any):void{
+  window.sessionStorage.setItem(STATE_KEY, state);
+}
+
 }

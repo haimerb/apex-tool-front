@@ -45,6 +45,7 @@
 .Principal
 .principal-container-process{
   margin-top: 2rem;
+  margin-bottom: 3rem;
   display: flex;
   flex-direction: row;
   /* align-items: center; */
@@ -55,10 +56,11 @@
 .Principal
 .principal-container-process-left{
   margin-right: 1rem;
+  margin-left: 1rem;
   height: 45%;
-  width: 30%;
+  width: 40%;
   /* border-right: 1px  #333; */
-  margin-right: 2rem;
+  /* margin-right: 2rem; */
 }
 
 .Pricipal
@@ -71,11 +73,12 @@
 
 .Principal
 .principal-container-process-right{
-  margin-left: 1rem;
+  /* margin-left: 1rem; */
   /* height: 50%; */
   height: auto;
-  width: 45%;
-  margin-left: 2rem;
+  width: 50%;
+  margin-left: 1rem;
+  margin-right: 1rem;
 }
 
 /* .Principal

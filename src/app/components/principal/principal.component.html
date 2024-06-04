@@ -2,113 +2,32 @@
 <div class="principal-container">
 
   <div class="menu">
-    <!-- <nav class="navbar navbar-expand navbar-dark bg-dark"> -->
-    <!-- <a href="#" class="navbar-brand">Apex</a> -->
+
     <img
       class="principal-logo"
-      src="https://www.ti-soluciones.co/certificapp/assets/logoapex.png"
+      src="/assets/logoapex.png"
       alt="logo"/>
 
-      <!-- <button mat-icon-button color="#fff"><mat-icon>Inicio</mat-icon></button> -->
       <button mat-button color="#fff">Inicio</button>
       <button mat-button color="#fff">Cambiar Password</button>
-      <button mat-button >Cargar archivos</button>
-      <button mat-button >Descarga de cetificados</button>
+      <button mat-button (click)="activeUploadFiles()">Cargar archivos</button>
+      <button mat-button (click)="activeDownloadFiles()">Descarga de cetificados</button>
       <button mat-button (click)="exit()">Salir</button>
 
-    <!-- <div class="navbar-nav mr-auto">
-      <li class="nav-item">
-        <a routerLink="./landing" (click)="goToPrincipal('')" class="nav-link">Inicio</a>
-      </li>
-      <li class="nav-item">
-        <a routerLink="tutorials" class="nav-link">Tutorials</a>
-      </li>
-      <li class="nav-item">
-        <a routerLink="add" class="nav-link">Add</a>
-      </li>
-      <li class="nav-item">
-        <a routerLink="add" class="nav-link">Cambiar Password</a>
-      </li>
-      <li class="nav-item">
-        <a routerLink="add" class="nav-link">Cargar archivos</a>
-      </li>
-      <li class="nav-item">
-        <a routerLink="add" class="nav-link">Descarga de cetificados</a>
-      </li>
-      <li class="nav-item">
-        <a routerLink="add" class="nav-link">Salir</a>
-      </li>
-    </div> -->
 
-  <!-- </nav> -->
 
   </div>
 
   <div class="mat-typography">
-    <h1> Descarga de Archivos</h1>
+    <h1 *ngIf="downloadFiles"> Descarga de Archivos </h1>
+    <h1 *ngIf="uploadFiles"> Carga de Archivos </h1>
   </div>
 
-  <div class="principal-container-process" >
 
+  @if(downloadFiles) {
+  <div class="principal-container-process">
 
-
-
-    <div class="principal-container-process-left mat-elevation-z8">
-<!--
-      <div class="card">
-
-        <h4 class="card-header">Descarga de archivos</h4>
-
-        <div class="card-body">
-
-          <h5 class="card-title">Formulario de descarga</h5>
-
-          <div class="form-group">
-
-
-            <input type="text" class="form-control form-control-sm" id="nit"  placeholder="Ingrese Nit">
-            <br>
-            <input type="text" class="form-control form-control-sm" id="nit"  placeholder="Ingrese Nit">
-            <br>
-
-
-            <label for="empresa-asociada">Empresa asociada</label>
-            <select class="form-control form-control-sm" id="empresa-asociada">
-              <option>1</option>
-              <option>2</option>
-              <option>3</option>
-              <option>4</option>
-              <option>5</option>
-            </select>
-
-            <br>
-
-            <label for="anio">Año</label>
-            <select class="form-control form-control-sm" id="anio">
-              <option>2024</option>
-              <option>2023</option>
-              <option>2022</option>
-              <option>2021</option>
-              <option>2020</option>
-            </select>
-
-            <br>
-
-            <label for="exampleFormControlSelect1">Tipo documento</label>
-            <select class="form-control form-control-sm" id="exampleFormControlSelect1">
-              <option>Ica</option>
-              <option>Retefuente</option>
-              <option>Iva</option>
-            </select>
-
-          </div>
-
-          <a href="#" class="btn btn-primary">Generar</a>
-
-        </div>
-      </div> -->
-
-
+    <div class="principal-container-process-left mat-elevation-z8" >
 
       <mat-card tabindex="0" class="mat-elevation-z8">
         <mat-card-header>
@@ -184,22 +103,20 @@
         </mat-card-content>
 
         <mat-card-actions>
-          <button mat-button>Generar</button>
+          <button mat-button color="primary">Generar</button>
           <button mat-button>Limpiar</button>
         </mat-card-actions>
 
         <mat-card-footer>
-          <!-- <mat-progress-bar mode="indeterminate"></mat-progress-bar> -->
         </mat-card-footer>
       </mat-card>
 
 
     </div>
 
-    <div class="principal-container-process-center">
+    <div class="principal-container-process-center" >
       <mat-divider vertical style="height:100%"></mat-divider>
     </div>
-
 
     <div class="principal-container-process-right mat-elevation-z8">
 
@@ -255,21 +172,31 @@
     </div>
 
   </div>
+}
 
-  <!-- <div class="landing-header">
-    <img
-      class="landing-logo"
-      src="../../../assets/logoapex.png"
-      alt="logo"
-    />
 
-    <p>
-      Principal!
-      PORTAL PROVEEDORES, CERTITAX Descargue sus certificados Tributarios IVA <code>/</code> RETEFUENTE <code>/</code> ICA
-    </p>
+@if(uploadFiles) {
+  <div class="principal-container-process" >
 
-    <Button variant="contained"> Iniciar</Button>
-  </div> -->
+    <div class="principal-container-process-center"  style="width: 100%; padding: 2%;">
+      <!-- <mat-divider vertical style="height:100%"></mat-divider> -->
+
+      <mat-card tabindex="0" class="mat-elevation-z8">
+        <mat-card-header>
+          <mat-card-subtitle>Manejo de archivos</mat-card-subtitle>
+          <mat-card-title>Carga de Archivos</mat-card-title>
+        </mat-card-header>
+
+      </mat-card>
+
+    </div>
+
+  </div>
+}
+
+@if(inicio){
+
+}
 
 
 

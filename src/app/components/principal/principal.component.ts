@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { AppComponent } from './../../app.component';
+import { Component, Input, OnInit, ViewChild,AfterViewInit  } from '@angular/core';
 // import { Tutorial } from 'src/app/models/tutorial.model';
 // import { TutorialService } from 'src/app/services/tutorial.service';
 
@@ -20,6 +21,7 @@ interface Centificado {
 }
 
 
+
 @Component({
   selector: 'principal',
   templateUrl: './principal.component.html',
@@ -27,6 +29,11 @@ interface Centificado {
 })
 
 export class Principal implements OnInit {
+  footerActive=false;
+  state="";
+  downloadFiles = false;
+  uploadFiles=false;
+  inicio=false;
   loader=false;
   typesOfShoes: string[] = ['Boots', 'Clogs', 'Loafers', 'Moccasins', 'Sneakers'];
   foods: Food[] = [
@@ -47,11 +54,33 @@ export class Principal implements OnInit {
     // private tutorialService: TutorialService,
     private AuthService: AuthService,
     private router: Router,
-     private storageService: StorageService
+    private storageService: StorageService,
+    //private appComponent: AppComponent
   ) {}
 
   ngOnInit(): void {
-    this.retrieveTutorials();
+    //this.appComponent.footerActive=true;
+    this.state=this.storageService.statePrincipal();
+    if(this.state!=""){
+      if(this.state=="downloadFiles"){
+        this.downloadFiles=true;
+        this.uploadFiles=false;
+        this.inicio=false;
+      }
+      if(this.state=="uploadFiles"){
+        this.downloadFiles=false;
+        this.uploadFiles=true;
+        this.inicio=false;
+      }
+      if(this.state=="inicio"){
+        this.downloadFiles=false;
+        this.uploadFiles=false;
+        this.inicio=true;
+      }
+
+    }
+
+    //this.retrieveTutorials();
     if (this.storageService?.isLoggedIn()) {
       //this.isLoggedIn = true;
       //this.roles = this.storageService.getUser().roles;
@@ -59,6 +88,17 @@ export class Principal implements OnInit {
     }else{
       this.router.navigate(['/landing']);
     }
+  }
+
+  activeDownloadFiles():void{
+    this.downloadFiles=true;
+    this.uploadFiles=false;
+    this.storageService.setStatePrincipal("downloadFiles");
+  }
+  activeUploadFiles():void{
+    this.downloadFiles=false;
+    this.uploadFiles=true;
+    this.storageService.setStatePrincipal("uploadFiles");
   }
 
   exit(): void{

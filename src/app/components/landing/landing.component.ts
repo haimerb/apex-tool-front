@@ -21,8 +21,8 @@ import { Router } from '@angular/router';
 })
 export class Landing implements OnInit
 {
-  //tutorials?: Tutorial[];
-  //currentTutorial: Tutorial = {};
+
+  public footerActive=false;
   currentIndex = -1;
   title = '';
   constructor(
@@ -30,7 +30,6 @@ export class Landing implements OnInit
     private router: Router) {}
   isLoggedIn = false;
   ngOnInit(): void {
-    //this.retrieveTutorials();
     if (this.storageService.isLoggedIn()) {
       this.isLoggedIn = true;
       //this.roles = this.storageService.getUser().roles;

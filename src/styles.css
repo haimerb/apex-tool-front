@@ -5,8 +5,11 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .footer{
   margin-top: 2rem;
   background-color: #282c34;
-  min-height: 6rem;
+  min-height: 8rem;
   color: aliceblue;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* mat-button.mat-primary,

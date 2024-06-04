@@ -39,10 +39,11 @@
   background-color: #282c34;
   min-height: 32vh;
   width: 100%;
-  max-width: 50vh;
+  max-width: 250px;
+  min-width: 150px;
   display: flex;
   flex-direction: column;
-  font-size: calc(10px + 2vmin);
+  /* font-size: calc(10px + 2vmin); */
   color: white;
 }
 .Login

@@ -26,7 +26,7 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatSelectModule} from '@angular/material/select';
 import {MatListModule} from '@angular/material/list';
 
-fetch(environment.apiUrl);
+//fetch(environment.apiUrl);
 
 
 @NgModule({

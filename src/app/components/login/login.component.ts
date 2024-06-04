@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Landing } from './../landing/landing.component';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { StorageService } from '../../services/storage.service';
+import { AppComponent } from '../../app.component';
+
 
 @Component({
   selector: 'app-login',
@@ -10,6 +13,7 @@ import { StorageService } from '../../services/storage.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+  statePrincipal="";
   idLoader=false;
   emailFormControl = new FormControl('', [Validators.required]);
   form: any = {
@@ -24,16 +28,19 @@ export class LoginComponent implements OnInit {
   constructor(
     private AuthService: AuthService,
     private storageService: StorageService,
-    private router: Router
+    private router: Router,
+    private appcomponent: AppComponent
   ) { }
 
   ngOnInit(): void {
+
     if (this.storageService.isLoggedIn()) {
       this.isLoggedIn = true;
-      this.roles = this.storageService.getUser().roles;
+      //this.roles = this.storageService.getUser().roles;
       this.router.navigate(['/principal']);
     }
   }
+
 
   onSubmit(): void {
     this.idLoader=true;
