@@ -13,6 +13,8 @@ import { Component, OnInit } from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment.development';
 
 @Component({
   selector: 'landing',
@@ -35,6 +37,10 @@ export class Landing implements OnInit
       //this.roles = this.storageService.getUser().roles;
       this.router.navigate(['/principal']);
     }
+  }
+
+  getAssetsENV():string{
+    return environment.assertsPath;
   }
 
   // goToVotes($myParam: string = ''): void {

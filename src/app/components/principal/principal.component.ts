@@ -4,9 +4,11 @@ import { Component, Input, OnInit, ViewChild,AfterViewInit  } from '@angular/cor
 // import { TutorialService } from 'src/app/services/tutorial.service';
 
 
+
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { StorageService } from '../../services/storage.service';
+import { environment } from '../../../environments/environment.development';
 // import { StorageService } from 'src/app/services/storage.service';
 
 
@@ -80,6 +82,7 @@ export class Principal implements OnInit {
 
     }
 
+
     //this.retrieveTutorials();
     if (this.storageService?.isLoggedIn()) {
       //this.isLoggedIn = true;
@@ -88,6 +91,11 @@ export class Principal implements OnInit {
     }else{
       this.router.navigate(['/landing']);
     }
+  }
+
+
+  getAssetsENV():string{
+    return environment.assertsPath;
   }
 
   activeDownloadFiles():void{

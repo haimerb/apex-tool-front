@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://www.ti-soluciones.co/certificapp/apext-api/api/'
+  apiUrl: 'https://www.ti-soluciones.co/certificapp/apext-api/api/',
+  assertsPath:'./apex-tool/assets/'
 };

@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { StorageService } from '../../services/storage.service';
 import { AppComponent } from '../../app.component';
+import { environment } from '../../../environments/environment.development';
 
 
 @Component({
@@ -41,16 +42,24 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  getAssetsENV():string{
+    return environment.assertsPath;
+  }
 
   onSubmit(): void {
     this.idLoader=true;
     const {
       email,
-      password } = this.form;
+      password
+    } = this.form;
 
     this.AuthService.login(
+
       email,
-      password).subscribe({
+      password
+
+    ).subscribe({
+
       next: data => {
         this.storageService.saveUser(data);
 
