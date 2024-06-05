@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient,HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-//const API_URL = 'http://localhost:8080/api/test/';
 import { environment } from '../../environments/environment';
 
 const httpOptions = {
@@ -11,12 +10,11 @@ const httpOptions = {
 @Injectable({
   providedIn: 'root',
 })
-export class FIlesService {
+export class CertificateService {
   constructor(private http: HttpClient) {}
 
   allCertificatesByOrg(idOrganization: string): Observable<any> {
     return this.http.post(
-      //environment.apiUrl + 'signin',
       environment.apiUrl+'login.php',
       {
         idOrganization
@@ -25,23 +23,21 @@ export class FIlesService {
     );
   }
 
-  // getGenerateCertificate(): Observable<any> {
-  //   return this.http.get(API_URL + 'all', { responseType: 'text' });
-  // }
+  getTypesCertificates(): Observable<any> {
+    return this.http.get(
+      environment.apiUrl+'certification.php/allTypesCertificates',
+      {}
+    );
+  }
 
-  // getPublicContent(): Observable<any> {
-  //   return this.http.get(API_URL + 'all', { responseType: 'text' });
-  // }
+  setCertificate(): Observable<any> {
+    return this.http.post(
+      environment.apiUrl+'login.php',
+      {
 
-  // getUserBoard(): Observable<any> {
-  //   return this.http.get(API_URL + 'user', { responseType: 'text' });
-  // }
+      },
+      httpOptions
+    );
+  }
 
-  // getModeratorBoard(): Observable<any> {
-  //   return this.http.get(API_URL + 'mod', { responseType: 'text' });
-  // }
-
-  // getAdminBoard(): Observable<any> {
-  //   return this.http.get(API_URL + 'admin', { responseType: 'text' });
-  // }
 }

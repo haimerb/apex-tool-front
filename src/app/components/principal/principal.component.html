@@ -31,7 +31,7 @@
 
       <mat-card tabindex="0" class="mat-elevation-z8">
         <mat-card-header>
-          <mat-card-subtitle>Archivos</mat-card-subtitle>
+          <mat-card-subtitle></mat-card-subtitle>
           <mat-card-title>Generar de Archivos</mat-card-title>
         </mat-card-header>
         <mat-card-content>
@@ -41,7 +41,7 @@
             <mat-label>Certificado</mat-label>
             <mat-select>
               @for (certificado of certificados; track certificado) {
-                <mat-option [value]="certificado.value">{{certificado.viewValue}}</mat-option>
+                <mat-option [value]="certificado.id_type_certificate">{{certificado.name_type}}</mat-option>
               }
             </mat-select>
           </mat-form-field>
@@ -86,8 +86,8 @@
                 <mat-form-field>
                  <mat-label>Año</mat-label>
                  <mat-select>
-                   @for (food of foods; track food) {
-                     <mat-option [value]="food.value">{{food.viewValue}}</mat-option>
+                   @for (anio of anio; track anio) {
+                     <mat-option [value]="anio.value">{{anio.viewValue}}</mat-option>
                    }
                  </mat-select>
                </mat-form-field>

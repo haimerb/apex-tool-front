@@ -1,28 +1,26 @@
 import { AppComponent } from './../../app.component';
 import { Component, Input, OnInit, ViewChild,AfterViewInit  } from '@angular/core';
-// import { Tutorial } from 'src/app/models/tutorial.model';
-// import { TutorialService } from 'src/app/services/tutorial.service';
-
-
-
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { StorageService } from '../../services/storage.service';
 import { environment } from '../../../environments/environment.development';
-// import { StorageService } from 'src/app/services/storage.service';
-
+import { CertificateService } from '../../services/certificate.service';
 
 interface Food {
   value: string;
   viewValue: string;
 }
 
-interface Centificado {
+interface Anio {
   value: string;
   viewValue: string;
 }
 
-
+interface Centificado {
+  id_type_certificate: string;
+  name_type: string;
+  description:string;
+}
 
 @Component({
   selector: 'principal',
@@ -43,17 +41,25 @@ export class Principal implements OnInit {
     {value: 'pizza-1', viewValue: 'Pizza'},
     {value: 'tacos-2', viewValue: 'Tacos'},
   ];
-  certificados: Centificado[] = [
-    {value: '0', viewValue: 'Certificado de Retención sobre IVA'},
-    {value: '1', viewValue: 'Certificado de Retención en la fuente'},
-    {value: '2', viewValue: 'Tacos'},
+  // certificados: Centificado[] = [
+  //   {value: '0', viewValue: 'Certificado de Retención sobre IVA'},
+  //   {value: '1', viewValue: 'Certificado de Retención en la fuente'},
+  //   {value: '2', viewValue: 'Tacos'},
+  // ];
+   anio: Anio[] = [
+    {value: '0', viewValue: '2020'},
+    {value: '0', viewValue: '2021'},
+    {value: '0', viewValue: '2022'},
+    {value: '0', viewValue: '2023'},
   ];
+  certificados?: Centificado[];
   //tutorials?: Tutorial[];
   //currentTutorial: Tutorial = {};
   currentIndex = -1;
   title = '';
   constructor(
     // private tutorialService: TutorialService,
+    private CetificateService : CertificateService,
     private AuthService: AuthService,
     private router: Router,
     private storageService: StorageService,
@@ -61,13 +67,25 @@ export class Principal implements OnInit {
   ) {}
 
   ngOnInit(): void {
+
     //this.appComponent.footerActive=true;
     this.state=this.storageService.statePrincipal();
+
     if(this.state!=""){
       if(this.state=="downloadFiles"){
         this.downloadFiles=true;
         this.uploadFiles=false;
         this.inicio=false;
+        this.CetificateService.getTypesCertificates().subscribe({
+          next: data => {
+            this.certificados=data;
+          },
+          error: err => {
+            // this.errorMessage = err?.error?.message;
+            // this.isLoginFailed = true;
+            console.log(err?.error?.message);
+          }
+        });
       }
       if(this.state=="uploadFiles"){
         this.downloadFiles=false;
