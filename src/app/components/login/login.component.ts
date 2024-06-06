@@ -6,6 +6,7 @@ import { AuthService } from '../../services/auth.service';
 import { StorageService } from '../../services/storage.service';
 import { AppComponent } from '../../app.component';
 import { environment } from '../../../environments/environment.development';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -27,6 +28,7 @@ export class LoginComponent implements OnInit {
   roles: string[] = [];
 
   constructor(
+    private _snackBar: MatSnackBar,
     private AuthService: AuthService,
     private storageService: StorageService,
     private router: Router,
@@ -41,28 +43,33 @@ export class LoginComponent implements OnInit {
       this.router.navigate(['/principal']);
     }
   }
-
   getAssetsENV():string{
     return environment.assertsPath;
   }
-
   onSubmit(): void {
     this.idLoader=true;
     const {
       email,
       password
     } = this.form;
-
     this.AuthService.login(
-
       email,
       password
 
     ).subscribe({
-
       next: data => {
-        this.storageService.saveUser(data);
+        console.log(data.code);
 
+        if(data?.code){
+          this.isLoginFailed = true;
+          this.isLoggedIn = false;
+          this.idLoader=false;
+          this.errorMessage="Error Login: Usuario, email o contraseña incorrecta";
+          this._snackBar.open(this.errorMessage,"Cerrar");
+          return;
+        }
+
+        this.storageService.saveUser(data);
         this.isLoginFailed = false;
         this.isLoggedIn = true;
         //this.roles = this.storageService?.getUser().roles;
@@ -73,6 +80,7 @@ export class LoginComponent implements OnInit {
       error: err => {
         this.errorMessage = err?.error?.message;
         this.isLoginFailed = true;
+        this.isLoginFailed = false;
       }
     });
 

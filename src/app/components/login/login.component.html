@@ -84,6 +84,13 @@
             </div>
           </div>
 
+
+          <mat-form-field hidden style="display: none;">
+            <mat-label style="display: none;">Message</mat-label>
+            <!-- <input title="" matInput disabled="" value="Disco party!" #message placeholder="" /> -->
+            <input hidden matInput value="Dance" #action  style="display: none;"/>
+          </mat-form-field>
+
         </form>
 
         <div class="alert alert-success" *ngIf="isLoggedIn">

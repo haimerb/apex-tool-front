@@ -29,6 +29,15 @@
 
     <div class="principal-container-process-left mat-elevation-z8" >
 
+      <mat-progress-spinner
+          *ngIf="this.idLoader"
+          class="example-margin"
+          color="#000"
+          mode="indeterminate"
+          value="value"
+        >
+        </mat-progress-spinner>
+
       <mat-card tabindex="0" class="mat-elevation-z8">
         <mat-card-header>
           <mat-card-subtitle></mat-card-subtitle>
@@ -63,8 +72,8 @@
                 <mat-form-field>
                   <mat-label>Empresa asociada</mat-label>
                   <mat-select>
-                    @for (food of foods; track food) {
-                      <mat-option [value]="food.value">{{food.viewValue}}</mat-option>
+                    @for (org of organizations; track org) {
+                      <mat-option [value]="org.id_organization">{{org.nit}}</mat-option>
                     }
                   </mat-select>
                 </mat-form-field>

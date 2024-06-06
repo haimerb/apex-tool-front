@@ -1,5 +1,6 @@
+import { OrganizationService } from './../../services/organization.service';
 import { AppComponent } from './../../app.component';
-import { Component, Input, OnInit, ViewChild,AfterViewInit  } from '@angular/core';
+import { Component, Input, OnInit, OnChanges,ViewChild,AfterViewInit, SimpleChanges  } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { StorageService } from '../../services/storage.service';
@@ -22,13 +23,22 @@ interface Centificado {
   description:string;
 }
 
+interface Organization {
+  id_organization: string;
+  name: string;
+  nit:string;
+  dv:string;
+}
+
 @Component({
   selector: 'principal',
   templateUrl: './principal.component.html',
   styleUrls: ['./principal.component.css'],
 })
 
-export class Principal implements OnInit {
+export class Principal implements OnInit,OnChanges {
+  idLoader=false;
+  generalNit?: string;
   footerActive=false;
   state="";
   downloadFiles = false;
@@ -46,6 +56,11 @@ export class Principal implements OnInit {
   //   {value: '1', viewValue: 'Certificado de Retención en la fuente'},
   //   {value: '2', viewValue: 'Tacos'},
   // ];
+  //   organizations: Centificado[] = [
+  //   {value: '0', viewValue: 'Certificado de Retención sobre IVA'},
+  //   {value: '1', viewValue: 'Certificado de Retención en la fuente'},
+  //   {value: '2', viewValue: 'Tacos'},
+  // ];
    anio: Anio[] = [
     {value: '0', viewValue: '2020'},
     {value: '0', viewValue: '2021'},
@@ -53,25 +68,72 @@ export class Principal implements OnInit {
     {value: '0', viewValue: '2023'},
   ];
   certificados?: Centificado[];
+  organizations?: Organization[];
   //tutorials?: Tutorial[];
   //currentTutorial: Tutorial = {};
   currentIndex = -1;
   title = '';
   constructor(
     // private tutorialService: TutorialService,
+    private OrganizationService: OrganizationService,
     private CetificateService : CertificateService,
     private AuthService: AuthService,
     private router: Router,
     private storageService: StorageService,
     //private appComponent: AppComponent
   ) {}
+  ngOnChanges(changes: SimpleChanges): void {
+    this.generalNit=this.storageService.getUser()?.nit;
+    this.state=this.storageService.statePrincipal();
+    if(this.state!=""){
+      this.idLoader=true;
+      if(this.state=="downloadFiles"){
+        this.downloadFiles=true;
+        this.uploadFiles=false;
+        this.inicio=false;
+        this.CetificateService.getTypesCertificates().subscribe({
+          next: data => {
+            this.certificados=data;
+            this.idLoader=false;
+          },
+          error: err => {
+            console.log(err?.error?.message);
+          }
+        });
+        this.OrganizationService.getAllOrganizations(this.generalNit||"").subscribe({
+          next: data => {
+            this.organizations=data;
+          },
+          error: err => {
+            console.log(err?.error?.message);
+            this.idLoader=false;
+          }
+        });
+        this.idLoader=false;
+      }
+      if(this.state=="uploadFiles"){
+        this.downloadFiles=false;
+        this.uploadFiles=true;
+        this.inicio=false;
+      }
+      if(this.state=="inicio"){
+        this.downloadFiles=false;
+        this.uploadFiles=false;
+        this.inicio=true;
+      }
+
+    }
+  }
 
   ngOnInit(): void {
+    console.log(this.storageService.getUser(),"user");
+    this.generalNit=this.storageService.getUser()?.nit;
 
     //this.appComponent.footerActive=true;
     this.state=this.storageService.statePrincipal();
 
     if(this.state!=""){
+      this.idLoader=true;
       if(this.state=="downloadFiles"){
         this.downloadFiles=true;
         this.uploadFiles=false;
@@ -84,8 +146,19 @@ export class Principal implements OnInit {
             // this.errorMessage = err?.error?.message;
             // this.isLoginFailed = true;
             console.log(err?.error?.message);
+            this.idLoader=false;
           }
         });
+        this.OrganizationService.getAllOrganizations(this.generalNit||"").subscribe({
+          next: data => {
+            this.organizations=data;
+          },
+          error: err => {
+            console.log(err?.error?.message);
+            this.idLoader=false;
+          }
+        });
+        this.idLoader=false;
       }
       if(this.state=="uploadFiles"){
         this.downloadFiles=false;
@@ -110,6 +183,7 @@ export class Principal implements OnInit {
       this.router.navigate(['/landing']);
     }
   }
+
 
 
   getAssetsENV():string{

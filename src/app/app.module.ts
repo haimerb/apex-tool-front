@@ -25,6 +25,8 @@ import {MatCardModule} from '@angular/material/card';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatSelectModule} from '@angular/material/select';
 import {MatListModule} from '@angular/material/list';
+import {MAT_SNACK_BAR_DATA} from '@angular/material/snack-bar';
+
 
 //fetch(environment.apiUrl);
 
@@ -57,8 +59,7 @@ import {MatListModule} from '@angular/material/list';
     MatCardModule,
     MatProgressBarModule,
     MatSelectModule,
-    MatListModule,
-
+    MatListModule
   ],
   exports: [MatButtonModule,FormsModule],
   providers: [
