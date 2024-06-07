@@ -1,6 +1,6 @@
 import { OrganizationService } from './../../services/organization.service';
 import { AppComponent } from './../../app.component';
-import { Component, Input, OnInit, OnChanges,ViewChild,AfterViewInit, SimpleChanges  } from '@angular/core';
+import { Component, Input, OnInit, OnChanges,ViewChild,AfterViewInit, DoCheck, SimpleChanges  } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { StorageService } from '../../services/storage.service';
@@ -36,7 +36,7 @@ interface Organization {
   styleUrls: ['./principal.component.css'],
 })
 
-export class Principal implements OnInit,OnChanges {
+export class Principal implements OnInit {
   idLoader=false;
   generalNit?: string;
   footerActive=false;
@@ -82,48 +82,90 @@ export class Principal implements OnInit,OnChanges {
     private storageService: StorageService,
     //private appComponent: AppComponent
   ) {}
-  ngOnChanges(changes: SimpleChanges): void {
-    this.generalNit=this.storageService.getUser()?.nit;
-    this.state=this.storageService.statePrincipal();
-    if(this.state!=""){
-      this.idLoader=true;
-      if(this.state=="downloadFiles"){
-        this.downloadFiles=true;
-        this.uploadFiles=false;
-        this.home=false;
-        this.CetificateService.getTypesCertificates().subscribe({
-          next: data => {
-            this.certificados=data;
-            this.idLoader=false;
-          },
-          error: err => {
-            console.log(err?.error?.message);
-          }
-        });
-        this.OrganizationService.getAllOrganizations(this.generalNit||"").subscribe({
-          next: data => {
-            this.organizations=data;
-          },
-          error: err => {
-            console.log(err?.error?.message);
-            this.idLoader=false;
-          }
-        });
-        this.idLoader=false;
-      }
-      if(this.state=="uploadFiles"){
-        this.downloadFiles=false;
-        this.uploadFiles=true;
-        this.home=false;
-      }
-      if(this.state=="inicio"){
-        this.downloadFiles=false;
-        this.uploadFiles=false;
-        this.home=true;
-      }
+  // ngDoCheck(): void {
+  //   this.generalNit=this.storageService.getUser()?.nit;
+  //   this.state=this.storageService.statePrincipal();
+  //   if(this.state!=""){
+  //     this.idLoader=true;
+  //     if(this.state=="downloadFiles"){
+  //       this.downloadFiles=true;
+  //       this.uploadFiles=false;
+  //       this.home=false;
+  //       this.CetificateService.getTypesCertificates().subscribe({
+  //         next: data => {
+  //           this.certificados=data;
+  //           this.idLoader=false;
+  //         },
+  //         error: err => {
+  //           console.log(err?.error?.message);
+  //         }
+  //       });
+  //       this.OrganizationService.getAllOrganizations(this.generalNit||"").subscribe({
+  //         next: data => {
+  //           this.organizations=data;
+  //         },
+  //         error: err => {
+  //           console.log(err?.error?.message);
+  //           this.idLoader=false;
+  //         }
+  //       });
+  //       this.idLoader=false;
+  //     }
+  //     if(this.state=="uploadFiles"){
+  //       this.downloadFiles=false;
+  //       this.uploadFiles=true;
+  //       this.home=false;
+  //     }
+  //     if(this.state=="home"){
+  //       this.downloadFiles=false;
+  //       this.uploadFiles=false;
+  //       this.home=true;
+  //     }
 
-    }
-  }
+  //   }
+  // }
+  // ngOnChanges(changes: SimpleChanges): void {
+  //   this.generalNit=this.storageService.getUser()?.nit;
+  //   this.state=this.storageService.statePrincipal();
+  //   if(this.state!=""){
+  //     this.idLoader=true;
+  //     if(this.state=="downloadFiles"){
+  //       this.downloadFiles=true;
+  //       this.uploadFiles=false;
+  //       this.home=false;
+  //       this.CetificateService.getTypesCertificates().subscribe({
+  //         next: data => {
+  //           this.certificados=data;
+  //           this.idLoader=false;
+  //         },
+  //         error: err => {
+  //           console.log(err?.error?.message);
+  //         }
+  //       });
+  //       this.OrganizationService.getAllOrganizations(this.generalNit||"").subscribe({
+  //         next: data => {
+  //           this.organizations=data;
+  //         },
+  //         error: err => {
+  //           console.log(err?.error?.message);
+  //           this.idLoader=false;
+  //         }
+  //       });
+  //       this.idLoader=false;
+  //     }
+  //     if(this.state=="uploadFiles"){
+  //       this.downloadFiles=false;
+  //       this.uploadFiles=true;
+  //       this.home=false;
+  //     }
+  //     if(this.state=="home"){
+  //       this.downloadFiles=false;
+  //       this.uploadFiles=false;
+  //       this.home=true;
+  //     }
+
+  //   }
+  // }
 
   ngOnInit(): void {
     console.log(this.storageService.getUser(),"user");
@@ -165,7 +207,7 @@ export class Principal implements OnInit,OnChanges {
         this.uploadFiles=true;
         this.home=false;
       }
-      if(this.state=="inicio"){
+      if(this.state=="home"){
         this.downloadFiles=false;
         this.uploadFiles=false;
         this.home=true;
