@@ -1,0 +1,160 @@
+<div class="Principal">
+  <div class="principal-container">
+
+<div class="principal-container-process">
+
+  <div class="principal-container-process-left mat-elevation-z8" >
+
+    <!-- <mat-progress-spinner
+        class="example-margin"
+        color="#000"
+        mode="indeterminate"
+        value="value"
+      >
+      </mat-progress-spinner> -->
+
+    <mat-card tabindex="0" class="mat-elevation-z8">
+      <mat-card-header>
+        <mat-card-subtitle></mat-card-subtitle>
+        <mat-card-title>Generar de Archivos</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+
+
+        <!-- <mat-form-field>
+          <mat-label>Certificado</mat-label>
+          <mat-select>
+            @for (certificado of certificados; track certificado) {
+              <mat-option [value]="certificado.id_type_certificate">{{certificado.name_type}}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field> -->
+        <br>
+
+        <mat-form-field>
+          <mat-label>Nit</mat-label>
+          <input
+              matInput
+               type="text"
+               id="nit"
+               name="nit"
+               placeholder="Ingrese Nit"
+               />
+              </mat-form-field>
+
+              <br>
+
+              <!-- <mat-form-field>
+                <mat-label>Empresa asociada</mat-label>
+                <mat-select>
+                  @for (org of organizations; track org) {
+                    <mat-option [value]="org.id_organization">{{org.nit}}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field> -->
+
+              <br>
+
+               <!-- <mat-form-field>
+                <mat-label>Favorite food</mat-label>
+                <mat-select>
+                  @for (food of foods; track food) {
+                    <mat-option [value]="food.value">{{food.viewValue}}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field> -->
+
+
+              <br>
+
+              <!-- <mat-form-field>
+               <mat-label>Año</mat-label>
+               <mat-select>
+                 @for (anio of anio; track anio) {
+                   <mat-option [value]="anio.value">{{anio.viewValue}}</mat-option>
+                 }
+               </mat-select>
+             </mat-form-field> -->
+
+
+
+        <p class="mat-typography">Seleccione las opciones para generar su certificado</p>
+        <!-- <p>{{ longText }}</p> -->
+
+
+        <mat-divider></mat-divider>
+
+      </mat-card-content>
+
+      <mat-card-actions>
+        <button mat-button color="primary">Generar</button>
+        <button mat-button>Limpiar</button>
+      </mat-card-actions>
+
+      <mat-card-footer>
+      </mat-card-footer>
+    </mat-card>
+
+
+  </div>
+
+  <div class="principal-container-process-center" >
+    <mat-divider vertical style="height:100%"></mat-divider>
+  </div>
+
+  <div class="principal-container-process-right mat-elevation-z8">
+
+    <!-- <div class="card">
+      <h4 class="card-header">Resultados</h4>
+      <div class="card-body">
+
+        <h5 class="card-title">Archivos generados</h5>
+        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+        <a href="#" class="btn btn-primary">Descargar</a>
+
+
+      </div>
+    </div> -->
+
+    <mat-card >
+      <mat-card-header>
+        <mat-card-subtitle>Archivos</mat-card-subtitle>
+        <mat-card-title>Resultados</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+
+
+        <mat-divider></mat-divider>
+
+        <li>
+
+        </li>
+
+      </mat-card-content>
+      <mat-card-actions>
+        <!-- <button mat-button>Cargar</button>
+        <button mat-button>Limpiar</button> -->
+
+
+        <!-- <mat-selection-list #shoes>
+          <mat-list-option *ngFor="let shoe of typesOfShoes">
+            {{shoe}}
+          </mat-list-option>
+        </mat-selection-list> -->
+
+        <!-- <p>
+          Options selected: {{shoes.selectedOptions.selected.length}}
+        </p> -->
+
+      </mat-card-actions>
+
+      <mat-card-footer>
+        <!-- <mat-progress-bar mode="indeterminate"></mat-progress-bar> -->
+      </mat-card-footer>
+    </mat-card>
+
+  </div>
+
+</div>
+</div>
+</div>

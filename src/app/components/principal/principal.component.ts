@@ -43,7 +43,7 @@ export class Principal implements OnInit,OnChanges {
   state="";
   downloadFiles = false;
   uploadFiles=false;
-  inicio=false;
+  home=false;
   loader=false;
   typesOfShoes: string[] = ['Boots', 'Clogs', 'Loafers', 'Moccasins', 'Sneakers'];
   foods: Food[] = [
@@ -90,7 +90,7 @@ export class Principal implements OnInit,OnChanges {
       if(this.state=="downloadFiles"){
         this.downloadFiles=true;
         this.uploadFiles=false;
-        this.inicio=false;
+        this.home=false;
         this.CetificateService.getTypesCertificates().subscribe({
           next: data => {
             this.certificados=data;
@@ -114,12 +114,12 @@ export class Principal implements OnInit,OnChanges {
       if(this.state=="uploadFiles"){
         this.downloadFiles=false;
         this.uploadFiles=true;
-        this.inicio=false;
+        this.home=false;
       }
       if(this.state=="inicio"){
         this.downloadFiles=false;
         this.uploadFiles=false;
-        this.inicio=true;
+        this.home=true;
       }
 
     }
@@ -137,7 +137,7 @@ export class Principal implements OnInit,OnChanges {
       if(this.state=="downloadFiles"){
         this.downloadFiles=true;
         this.uploadFiles=false;
-        this.inicio=false;
+        this.home=false;
         this.CetificateService.getTypesCertificates().subscribe({
           next: data => {
             this.certificados=data;
@@ -163,12 +163,12 @@ export class Principal implements OnInit,OnChanges {
       if(this.state=="uploadFiles"){
         this.downloadFiles=false;
         this.uploadFiles=true;
-        this.inicio=false;
+        this.home=false;
       }
       if(this.state=="inicio"){
         this.downloadFiles=false;
         this.uploadFiles=false;
-        this.inicio=true;
+        this.home=true;
       }
 
     }
@@ -192,13 +192,22 @@ export class Principal implements OnInit,OnChanges {
 
   activeDownloadFiles():void{
     this.downloadFiles=true;
+    this.home=false;
     this.uploadFiles=false;
     this.storageService.setStatePrincipal("downloadFiles");
   }
   activeUploadFiles():void{
     this.downloadFiles=false;
+    this.home=false;
     this.uploadFiles=true;
     this.storageService.setStatePrincipal("uploadFiles");
+  }
+
+  activeHome():void{
+    this.downloadFiles=false;
+    this.home=true;
+    this.uploadFiles=false;
+    this.storageService.setStatePrincipal("home");
   }
 
   exit(): void{

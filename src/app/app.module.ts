@@ -26,10 +26,8 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatSelectModule} from '@angular/material/select';
 import {MatListModule} from '@angular/material/list';
 import {MAT_SNACK_BAR_DATA} from '@angular/material/snack-bar';
-
-
-//fetch(environment.apiUrl);
-
+import { HomeComponent } from './components/home/home.component';
+import { FooterComponent } from './components/footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +38,8 @@ import {MAT_SNACK_BAR_DATA} from '@angular/material/snack-bar';
     Landing,
     LoginComponent,
     Principal,
+    HomeComponent,
+    FooterComponent
 
   ],
   imports: [
