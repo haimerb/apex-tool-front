@@ -30,37 +30,37 @@ interface Organization {
   dv:string;
 }
 
+interface CertificatesGenerated {
+  id_certificados_generado:string;
+  tipo_certificado:string;
+  nombre:string;
+  organization_asociate:string;
+  name:string;
+  nit:string;
+  dv:string;
+}
+
 @Component({
   selector: 'principal',
   templateUrl: './principal.component.html',
   styleUrls: ['./principal.component.css'],
 })
 
-export class Principal implements OnInit {
+export class Principal implements OnInit, DoCheck {
+  noChangeCount=0;
+  changeDetected = false;
+  changeLog=new Array<string>();
   idLoader=false;
   generalNit?: string;
   footerActive=false;
   state="";
   downloadFiles = false;
+  oldDownloadFiles = false;
   uploadFiles=false;
   home=false;
   loader=false;
   typesOfShoes: string[] = ['Boots', 'Clogs', 'Loafers', 'Moccasins', 'Sneakers'];
-  foods: Food[] = [
-    {value: 'steak-0', viewValue: 'Steak'},
-    {value: 'pizza-1', viewValue: 'Pizza'},
-    {value: 'tacos-2', viewValue: 'Tacos'},
-  ];
-  // certificados: Centificado[] = [
-  //   {value: '0', viewValue: 'Certificado de Retención sobre IVA'},
-  //   {value: '1', viewValue: 'Certificado de Retención en la fuente'},
-  //   {value: '2', viewValue: 'Tacos'},
-  // ];
-  //   organizations: Centificado[] = [
-  //   {value: '0', viewValue: 'Certificado de Retención sobre IVA'},
-  //   {value: '1', viewValue: 'Certificado de Retención en la fuente'},
-  //   {value: '2', viewValue: 'Tacos'},
-  // ];
+
    anio: Anio[] = [
     {value: '0', viewValue: '2020'},
     {value: '0', viewValue: '2021'},
@@ -69,105 +69,112 @@ export class Principal implements OnInit {
   ];
   certificados?: Centificado[];
   organizations?: Organization[];
-  //tutorials?: Tutorial[];
-  //currentTutorial: Tutorial = {};
+  certificatesGenerated?: CertificatesGenerated[];
   currentIndex = -1;
   title = '';
   constructor(
-    // private tutorialService: TutorialService,
     private OrganizationService: OrganizationService,
     private CetificateService : CertificateService,
     private AuthService: AuthService,
     private router: Router,
     private storageService: StorageService,
-    //private appComponent: AppComponent
   ) {}
-  // ngDoCheck(): void {
-  //   this.generalNit=this.storageService.getUser()?.nit;
-  //   this.state=this.storageService.statePrincipal();
-  //   if(this.state!=""){
-  //     this.idLoader=true;
-  //     if(this.state=="downloadFiles"){
-  //       this.downloadFiles=true;
-  //       this.uploadFiles=false;
-  //       this.home=false;
-  //       this.CetificateService.getTypesCertificates().subscribe({
-  //         next: data => {
-  //           this.certificados=data;
-  //           this.idLoader=false;
-  //         },
-  //         error: err => {
-  //           console.log(err?.error?.message);
-  //         }
-  //       });
-  //       this.OrganizationService.getAllOrganizations(this.generalNit||"").subscribe({
-  //         next: data => {
-  //           this.organizations=data;
-  //         },
-  //         error: err => {
-  //           console.log(err?.error?.message);
-  //           this.idLoader=false;
-  //         }
-  //       });
-  //       this.idLoader=false;
-  //     }
-  //     if(this.state=="uploadFiles"){
-  //       this.downloadFiles=false;
-  //       this.uploadFiles=true;
-  //       this.home=false;
-  //     }
-  //     if(this.state=="home"){
-  //       this.downloadFiles=false;
-  //       this.uploadFiles=false;
-  //       this.home=true;
-  //     }
 
-  //   }
-  // }
-  // ngOnChanges(changes: SimpleChanges): void {
-  //   this.generalNit=this.storageService.getUser()?.nit;
-  //   this.state=this.storageService.statePrincipal();
-  //   if(this.state!=""){
-  //     this.idLoader=true;
-  //     if(this.state=="downloadFiles"){
-  //       this.downloadFiles=true;
-  //       this.uploadFiles=false;
-  //       this.home=false;
-  //       this.CetificateService.getTypesCertificates().subscribe({
-  //         next: data => {
-  //           this.certificados=data;
-  //           this.idLoader=false;
-  //         },
-  //         error: err => {
-  //           console.log(err?.error?.message);
-  //         }
-  //       });
-  //       this.OrganizationService.getAllOrganizations(this.generalNit||"").subscribe({
-  //         next: data => {
-  //           this.organizations=data;
-  //         },
-  //         error: err => {
-  //           console.log(err?.error?.message);
-  //           this.idLoader=false;
-  //         }
-  //       });
-  //       this.idLoader=false;
-  //     }
-  //     if(this.state=="uploadFiles"){
-  //       this.downloadFiles=false;
-  //       this.uploadFiles=true;
-  //       this.home=false;
-  //     }
-  //     if(this.state=="home"){
-  //       this.downloadFiles=false;
-  //       this.uploadFiles=false;
-  //       this.home=true;
-  //     }
+  ngDoCheck(): void {
 
-  //   }
-  // }
+    if (this.downloadFiles!== this.oldDownloadFiles) {
+      this.idLoader=true;
+      this.changeDetected = true;
+      this.changeLog.push(`DoCheck: Hero name changed to "${this.downloadFiles}" from "${this.oldDownloadFiles}"`);
+      this.oldDownloadFiles = this.downloadFiles;
+      this.generalNit=this.storageService.getUser()?.nit;
+      this.state=this.storageService.statePrincipal();
 
+      if(this.state!=""){
+
+        if(this.state=="downloadFiles"){
+          this.downloadFiles=true;
+          this.uploadFiles=false;
+          this.home=false;
+          this.CetificateService.getTypesCertificates().subscribe({
+            next: data => {
+              this.certificados=data;
+            },
+            error: err => {
+              // this.errorMessage = err?.error?.message;
+              // this.isLoginFailed = true;
+              console.log(err?.error?.message);
+            },complete: () => {
+              this.idLoader=false;
+              console.log("Completado");
+              this.idLoader=false;
+            }
+          });
+          this.OrganizationService.getAllOrganizations(this.generalNit||"").subscribe({
+            next: data => {
+              this.organizations=data;
+            },
+            error: err => {
+              console.log(err?.error?.message);
+              return;
+            },complete: () => {
+              this.idLoader=false;
+              console.log("Completado");
+              this.idLoader=false;
+            }
+          });
+          this.CetificateService.allCertificatesByOrg("1").subscribe({
+            next: data => {
+              this.certificatesGenerated=data;
+              //console.log(this.certificatesGenerated);
+              //console.log(data);
+            },
+            error: err => {
+              // this.errorMessage = err?.error?.message;
+              // this.isLoginFailed = true;
+              console.log(err?.error?.message);
+            },complete: () => {
+              this.idLoader=false;
+              console.log("Completado");
+              this.idLoader=false;
+            }
+          });
+
+        }
+        if(this.state=="uploadFiles"){
+          this.downloadFiles=false;
+          this.uploadFiles=true;
+          this.home=false;
+        }
+        if(this.state=="home"){
+          this.downloadFiles=false;
+          this.uploadFiles=false;
+          this.home=true;
+        }
+
+      }
+
+    }
+    if (this.changeDetected) {
+        this.noChangeCount = 0;
+    } else {
+        // log that hook was called when there was no relevant change.
+        const count = this.noChangeCount += 1;
+        const noChangeMsg = `DoCheck called ${count}x when no change to hero or power`;
+        if (count === 1) {
+          // add new "no change" message
+          this.changeLog.push(noChangeMsg);
+        } else {
+          // update last "no change" message
+          this.changeLog[this.changeLog.length - 1] = noChangeMsg;
+        }
+    }
+    this.changeDetected = false;
+    console.log(this.changeLog,"Change Log");
+    this.idLoader=false;
+  }
   ngOnInit(): void {
+    this.idLoader=true;
     console.log(this.storageService.getUser(),"user");
     this.generalNit=this.storageService.getUser()?.nit;
 
@@ -175,7 +182,6 @@ export class Principal implements OnInit {
     this.state=this.storageService.statePrincipal();
 
     if(this.state!=""){
-      this.idLoader=true;
       if(this.state=="downloadFiles"){
         this.downloadFiles=true;
         this.uploadFiles=false;
@@ -183,24 +189,58 @@ export class Principal implements OnInit {
         this.CetificateService.getTypesCertificates().subscribe({
           next: data => {
             this.certificados=data;
+            this.idLoader=false;
           },
           error: err => {
             // this.errorMessage = err?.error?.message;
             // this.isLoginFailed = true;
             console.log(err?.error?.message);
+            //*-----this.idLoader=false;
+            return;
+          },
+          complete: () => {
             this.idLoader=false;
+            console.log("Completado");
+            this.idLoader=false;
+            return;
           }
         });
         this.OrganizationService.getAllOrganizations(this.generalNit||"").subscribe({
           next: data => {
             this.organizations=data;
+            this.idLoader=false;
+            return;
           },
           error: err => {
             console.log(err?.error?.message);
+            //*-----this.idLoader=false;
+            return;
+          },
+          complete: () => {
+            this.idLoader=false;
+            console.log("Completado");
+            this.idLoader=false;
+            return;
+          }
+        });
+        //*-----this.idLoader=false;
+        this.CetificateService.allCertificatesByOrg("1").subscribe({
+          next: data => {
+            this.certificatesGenerated=data;
+            //console.log(this.certificatesGenerated);
+            //console.log(data);
+          },
+          error: err => {
+            // this.errorMessage = err?.error?.message;
+            // this.isLoginFailed = true;
+            console.log(err?.error?.message);
+          },complete: () => {
+            this.idLoader=false;
+            console.log("Completado");
             this.idLoader=false;
           }
         });
-        this.idLoader=false;
+
       }
       if(this.state=="uploadFiles"){
         this.downloadFiles=false;
@@ -212,9 +252,8 @@ export class Principal implements OnInit {
         this.uploadFiles=false;
         this.home=true;
       }
-
+      this.idLoader=false;
     }
-
 
     //this.retrieveTutorials();
     if (this.storageService?.isLoggedIn()) {
@@ -224,6 +263,7 @@ export class Principal implements OnInit {
     }else{
       this.router.navigate(['/landing']);
     }
+    this.idLoader=false;
   }
 
 
@@ -233,10 +273,12 @@ export class Principal implements OnInit {
   }
 
   activeDownloadFiles():void{
+    this.idLoader=true;
     this.downloadFiles=true;
     this.home=false;
     this.uploadFiles=false;
     this.storageService.setStatePrincipal("downloadFiles");
+    this.idLoader=false;
   }
   activeUploadFiles():void{
     this.downloadFiles=false;
