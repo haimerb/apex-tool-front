@@ -12,9 +12,9 @@
         <form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
 
        <mat-progress-spinner
-          *ngIf="this.idLoader"
+        *ngIf="this.idLoader"
           class="example-margin"
-          color="#000"
+          color="primary"
           mode="indeterminate"
           value="value"
         >
