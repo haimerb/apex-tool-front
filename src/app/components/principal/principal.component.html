@@ -29,15 +29,15 @@
 
     <div class="principal-container-process-left mat-elevation-z8" >
 
+      @if(idLoader==true) {
       <mat-progress-spinner
-          *ngIf="this.idLoader"
           class="example-margin"
-          color="#000"
+          color="primary"
           mode="indeterminate"
           value="value"
         >
         </mat-progress-spinner>
-
+      }
       <mat-card tabindex="0" class="mat-elevation-z8">
         <mat-card-header>
           <mat-card-subtitle></mat-card-subtitle>
@@ -83,8 +83,8 @@
                  <mat-form-field>
                   <mat-label>Favorite food</mat-label>
                   <mat-select>
-                    @for (food of foods; track food) {
-                      <mat-option [value]="food.value">{{food.viewValue}}</mat-option>
+                    @for (org of organizations; track org) {
+                      <mat-option [value]="org.id_organization">{{org.nit}}</mat-option>
                     }
                   </mat-select>
                 </mat-form-field>
@@ -161,14 +161,22 @@
           <button mat-button>Limpiar</button> -->
 
 
-          <mat-selection-list #shoes>
+          <!-- <mat-selection-list #shoes>
             <mat-list-option *ngFor="let shoe of typesOfShoes">
               {{shoe}}
             </mat-list-option>
+          </mat-selection-list> -->
+
+          <mat-selection-list #certificateG>
+            <mat-list-option *ngFor="let certificateG of certificatesGenerated">
+              {{certificateG.nombre}}
+            </mat-list-option>
           </mat-selection-list>
 
+
+
           <p>
-            Options selected: {{shoes.selectedOptions.selected.length}}
+            Opciones seleccionadas: {{certificateG.selectedOptions.selected.length}}
           </p>
 
         </mat-card-actions>
