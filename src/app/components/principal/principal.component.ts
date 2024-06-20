@@ -1,3 +1,5 @@
+
+import { FIleService } from './../../services/file.service';
 import { OrganizationService } from './../../services/organization.service';
 import { AppComponent } from './../../app.component';
 import { Component, Input, OnInit, OnChanges,ViewChild,AfterViewInit, DoCheck, SimpleChanges  } from '@angular/core';
@@ -6,6 +8,14 @@ import { AuthService } from '../../services/auth.service';
 import { StorageService } from '../../services/storage.service';
 import { environment } from '../../../environments/environment.development';
 import { CertificateService } from '../../services/certificate.service';
+import { FormControl,Validators } from '@angular/forms';
+import { AcceptValidator, MaxSizeValidator } from '@angular-material-components/file-input';
+import { MatListOption } from '@angular/material/list';
+import { CertificateGenerateItem } from '../../models/certificateGenerate.model';
+import { FileSaverModule } from 'ngx-filesaver';
+import FileSaver from 'file-saver';
+
+//import { saveAs } from 'file-saver';
 
 interface Food {
   value: string;
@@ -38,6 +48,7 @@ interface CertificatesGenerated {
   name:string;
   nit:string;
   dv:string;
+  url_assoc_file:string;
 }
 
 @Component({
@@ -47,6 +58,18 @@ interface CertificatesGenerated {
 })
 
 export class Principal implements OnInit, DoCheck {
+  options: any = {
+    autoBom: false,
+  };
+  certificateSelected?:CertificateGenerateItem;
+  files: any[]=[];
+  maxSize= 16;
+  //fileControl?: FormControl;
+  fileControl = new FormControl('', [Validators.required,MaxSizeValidator(this.maxSize * 1024)]);
+
+  form: any = {
+    uploadfile: null
+  };
   noChangeCount=0;
   changeDetected = false;
   changeLog=new Array<string>();
@@ -73,12 +96,19 @@ export class Principal implements OnInit, DoCheck {
   currentIndex = -1;
   title = '';
   constructor(
+    private fIleService : FIleService,
     private OrganizationService: OrganizationService,
     private CetificateService : CertificateService,
     private AuthService: AuthService,
     private router: Router,
     private storageService: StorageService,
-  ) {}
+  ) {
+    this.home =true;
+    // this.fileControl = new FormControl(this.files, [
+    //   Validators.required,
+    //   MaxSizeValidator(this.maxSize * 1024)
+    // ])
+  }
 
   ngDoCheck(): void {
 
@@ -174,6 +204,14 @@ export class Principal implements OnInit, DoCheck {
     this.idLoader=false;
   }
   ngOnInit(): void {
+    this.fileControl?.valueChanges.subscribe((files: any) => {
+      console.log(files,"FILES");
+      if (!Array.isArray(files)) {
+        this.files = [files];
+      } else {
+        this.files = files;
+      }
+    })
     this.idLoader=true;
     console.log(this.storageService.getUser(),"user");
     this.generalNit=this.storageService.getUser()?.nit;
@@ -266,7 +304,48 @@ export class Principal implements OnInit, DoCheck {
     this.idLoader=false;
   }
 
+  onSubmit(): void {
 
+
+
+    console.log("onSubmit");
+    //console.log(this.fileUpload.valueChanges);
+    console.log(this.fileControl.value,"VALUE");
+    console.log(this.files,"FILES2");
+
+
+    let  formData: any = new FormData();
+         formData.append('uploadFile', this.fileControl.value);
+
+    this.fIleService.upLoadFIle(formData).subscribe({
+      next: data => {
+        // this.organizations=data;
+        console.log(data,"DATA");
+      },
+      error: err => {
+        console.log(err?.error?.message);
+      },
+      complete: () => {
+        console.log("Completado");
+      }
+    }
+    )
+  }
+
+  selectedItemCert(select: MatListOption[]): void {
+    this.certificateSelected=select[0].value;
+    console.log(JSON.stringify(this.certificateSelected));
+    //console.log(this.certificateSelected[0]);
+  }
+
+  // selectedItemCertSelect(): CertificatesGenerated {
+  //   return null;
+  //   //return new CertificateGenerateItem(this.certificateSelected[0]);
+  // }
+
+  decargar():void {
+    window.open(`${environment.downloadPathApi}${this.certificateSelected?.url_assoc_file}`, '_blank');
+  }
 
   getAssetsENV():string{
     return environment.assertsPath;
@@ -302,47 +381,4 @@ export class Principal implements OnInit, DoCheck {
   goToPrincipal($myParam: string = ''): void {
     this.router?.navigate(['/landing']);
   }
-  retrieveTutorials(): void {
-    // this.tutorialService.getAll().subscribe({
-    //   next: (data) => {
-    //     this.tutorials = data;
-    //     console.log(data);
-    //   },
-    //   error: (e) => console.error(e)
-    // });
-  }
-
-  refreshList(): void {
-    this.retrieveTutorials();
-    //this.currentTutorial = {};
-    this.currentIndex = -1;
-  }
-
-  // setActiveTutorial(tutorial: Tutorial, index: number): void {
-  //   this.currentTutorial = tutorial;
-  //   this.currentIndex = index;
-  // }
-
-  // removeAllTutorials(): void {
-  //   this.tutorialService.deleteAll().subscribe({
-  //     next: (res) => {
-  //       console.log(res);
-  //       this.refreshList();
-  //     },
-  //     error: (e) => console.error(e)
-  //   });
-  // }
-
-  // searchTitle(): void {
-  //   this.currentTutorial = {};
-  //   this.currentIndex = -1;
-
-  //   this.tutorialService.findByTitle(this.title).subscribe({
-  //     next: (data) => {
-  //       this.tutorials = data;
-  //       console.log(data);
-  //     },
-  //     error: (e) => console.error(e)
-  //   });
-  // }
 }
