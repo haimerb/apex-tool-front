@@ -58,7 +58,7 @@ export class LoginComponent implements OnInit {
 
     ).subscribe({
       next: data => {
-        console.log(data.code);
+        console.log(data?.code);
 
         if(data?.code){
           this.isLoginFailed = true;
