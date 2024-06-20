@@ -18,7 +18,7 @@
 
   </div>
 
-  <div class="mat-typography">
+  <div class="mat-typography titles">
     <h1 *ngIf="downloadFiles"> Descarga de Archivos </h1>
     <h1 *ngIf="uploadFiles"> Carga de Archivos </h1>
   </div>
@@ -30,6 +30,7 @@
     <div class="principal-container-process-left mat-elevation-z8" >
 
       @if(idLoader==true) {
+
       <mat-progress-spinner
           class="example-margin"
           color="primary"
@@ -38,15 +39,17 @@
         >
         </mat-progress-spinner>
       }
-      <mat-card tabindex="0" class="mat-elevation-z8">
-        <mat-card-header>
+      <form name="form" class="form-generate" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
+      <mat-card tabindex="0" class="mat-elevation-z8" >
+        <mat-card-header style="margin-bottom: 1rem;">
           <mat-card-subtitle></mat-card-subtitle>
-          <mat-card-title>Generar de Archivos</mat-card-title>
+          <mat-card-title >Generar de Archivos</mat-card-title>
         </mat-card-header>
-        <mat-card-content>
+        <mat-card-content >
 
+          <mat-divider></mat-divider>
 
-          <mat-form-field>
+          <mat-form-field style="margin-top: 2rem;">
             <mat-label>Certificado</mat-label>
             <mat-select>
               @for (certificado of certificados; track certificado) {
@@ -80,7 +83,7 @@
 
                 <br>
 
-                 <mat-form-field>
+                 <!-- <mat-form-field>
                   <mat-label>Favorite food</mat-label>
                   <mat-select>
                     @for (org of organizations; track org) {
@@ -90,7 +93,7 @@
                 </mat-form-field>
 
 
-                <br>
+                <br> -->
 
                 <mat-form-field>
                  <mat-label>Año</mat-label>
@@ -102,11 +105,12 @@
                </mat-form-field>
 
 
-
-          <p class="mat-typography">Seleccione las opciones para generar su certificado</p>
-          <!-- <p>{{ longText }}</p> -->
-
-
+               <mat-divider></mat-divider>
+          <div class="mat-typography">
+            <p>
+              Seleccione las opciones para generar su certificado
+            </p>
+          </div>
           <mat-divider></mat-divider>
 
         </mat-card-content>
@@ -120,7 +124,7 @@
         </mat-card-footer>
       </mat-card>
 
-
+      </form>
     </div>
 
     <div class="principal-container-process-center" >
@@ -129,22 +133,10 @@
 
     <div class="principal-container-process-right mat-elevation-z8">
 
-      <!-- <div class="card">
-        <h4 class="card-header">Resultados</h4>
-        <div class="card-body">
-
-          <h5 class="card-title">Archivos generados</h5>
-          <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-          <a href="#" class="btn btn-primary">Descargar</a>
-
-
-        </div>
-      </div> -->
-
       <mat-card >
-        <mat-card-header>
-          <mat-card-subtitle>Archivos</mat-card-subtitle>
-          <mat-card-title>Resultados</mat-card-title>
+        <mat-card-header style="margin-bottom: 1rem;">
+          <mat-card-subtitle></mat-card-subtitle>
+          <mat-card-title>Certificados Generados</mat-card-title>
         </mat-card-header>
         <mat-card-content>
 
@@ -155,9 +147,8 @@
 
           </li>
 
-        </mat-card-content>
-        <mat-card-actions>
-          <!-- <button mat-button>Cargar</button>
+
+            <!-- <button mat-button>Cargar</button>
           <button mat-button>Limpiar</button> -->
 
 
@@ -167,18 +158,31 @@
             </mat-list-option>
           </mat-selection-list> -->
 
-          <mat-selection-list #certificateG>
-            <mat-list-option *ngFor="let certificateG of certificatesGenerated">
-              {{certificateG.nombre}}
+          <mat-selection-list #certificateG (selectionChange)="selectedItemCert(certificateG.selectedOptions.selected)">
+            <mat-list-option  *ngFor="let certificateG of certificatesGenerated" [value]="certificateG">
+              <div class="mat-typography">
+                <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="document"></mat-icon>
+                <h3>
+                {{certificateG.nombre+" - "+certificateG?.url_assoc_file}}
+              </h3>
+              </div>
             </mat-list-option>
           </mat-selection-list>
-
-
-
           <p>
             Opciones seleccionadas: {{certificateG.selectedOptions.selected.length}}
           </p>
+          <div class="mat-typography">
+            <h3> {{this.certificateSelected?.nombre}} </h3>
+            <h3> {{this.certificateSelected?.url_assoc_file}} </h3>
+          </div>
 
+        </mat-card-content>
+
+        <mat-card-actions >
+
+
+        <mat-divider></mat-divider>
+        <button mat-button color="primary" (click)="decargar()">Descargar</button>
         </mat-card-actions>
 
         <mat-card-footer>
@@ -195,7 +199,7 @@
 @if(uploadFiles) {
   <div class="principal-container-process" >
 
-    <div class="principal-container-process-center"  style="width: 100%; padding: 2%;">
+    <div class="principal-container-process-center"  style="width: 100%; height: 100%; padding: 2%;">
       <!-- <mat-divider vertical style="height:100%"></mat-divider> -->
 
       <mat-card tabindex="0" class="mat-elevation-z8">
@@ -203,6 +207,55 @@
           <mat-card-subtitle>Manejo de archivos</mat-card-subtitle>
           <mat-card-title>Carga de Archivos</mat-card-title>
         </mat-card-header>
+
+        <mat-card-content>
+
+
+          <form name="form" (ngSubmit)="onSubmit()" #f="ngForm" enctype="multipart/form-data" >
+
+            <!-- <mat-form-field>
+              <ngx-mat-file-input
+               accept=".xlsx"
+               [(ngModel)]="form.uploadFile"
+               [formControl]="form.uploadFile"
+              >
+              </ngx-mat-file-input>
+           </mat-form-field> -->
+
+           <mat-form-field>
+            <ngx-mat-file-input
+             [formControl]="fileControl"
+              accept=".xlsx"
+             >
+              <mat-icon ngxMatFileInputIcon>folder</mat-icon>
+            </ngx-mat-file-input>
+          </mat-form-field>
+
+
+
+          <div class="title">Selección de acrchivo(s):</div>
+          <div class="value">
+            <ul>
+              <li *ngFor="let item of files">{{item?.name}}</li>
+            </ul>
+          </div>
+
+
+
+          <mat-card-actions>
+            <button mat-button color="primary" type="submit">Cargar</button>
+            <button mat-button>Limpiar</button>
+          </mat-card-actions>
+
+
+          </form>
+
+
+
+        </mat-card-content>
+
+
+
 
       </mat-card>
 
