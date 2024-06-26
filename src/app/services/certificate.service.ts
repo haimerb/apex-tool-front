@@ -17,7 +17,6 @@ export class CertificateService {
     const httpOptions = {
       params:new HttpParams().set("idOrganization",idOrganization)
     };
-
     return this.http.get(
       environment.apiUrl+'certification.php/certifications',httpOptions
     );
@@ -33,6 +32,16 @@ export class CertificateService {
   setCertificate(): Observable<any> {
     return this.http.post(
       environment.apiUrl+'login.php',
+      {
+
+      },
+      httpOptions
+    );
+  }
+
+  setBaseCertificate(): Observable<any> {
+    return this.http.post(
+      environment.apiUrl+'certification.php/generateBase',
       {
 
       },

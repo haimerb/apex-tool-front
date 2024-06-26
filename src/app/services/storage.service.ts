@@ -29,7 +29,8 @@ export class StorageService {
 
   public isLoggedIn(): boolean {
     const user = window.sessionStorage.getItem(USER_KEY);
-    if (user) {
+    console.log(user);
+    if (user&&user!=null) {
       return true;
     }
 

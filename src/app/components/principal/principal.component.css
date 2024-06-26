@@ -56,7 +56,7 @@
 .Principal
 .principal-container-process-left{
   margin-right: 1.8rem;
-  /* margin-left: 1rem; */
+  margin-left: 1rem;
   height: 45%;
   width: 40%;
   /* border-right: 1px  #333; */
@@ -91,12 +91,21 @@ mat-card
 mat-card-actions{
   /* height: 100%;
   width: 100% ; */
-  /* display: flex;
+  /* height: auto !important; */
+  display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: baseline; */
+  justify-content: baseline;
   margin-top: auto;
 }
+
+.Principal
+.principal-container-process-right
+mat-card
+mat-card-actions mat-divider{
+  width: 90% ;
+}
+
 
 /* .Principal
 .card{
@@ -145,6 +154,7 @@ mat-card-footer{
   border-bottom-right-radius: 0.4rem; */
   /* height: 0.3rem; */
   width: auto;
+
   /* box-shadow: 0.1rem 0.3rem 0.1rem #0171bb ; */
 }
 
@@ -184,5 +194,5 @@ p{
 }
 
 mat-divider{
-  padding: 1rem;
+  padding: 0.8rem;
 }

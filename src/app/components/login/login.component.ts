@@ -1,4 +1,3 @@
-import { Landing } from './../landing/landing.component';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -60,7 +59,7 @@ export class LoginComponent implements OnInit {
       next: data => {
         console.log(data?.code);
 
-        if(data?.code){
+        if(data?.code!=200){
           this.isLoginFailed = true;
           this.isLoggedIn = false;
           this.idLoader=false;

@@ -17,14 +17,30 @@ export class FIleService {
 
 
 
-  upLoadFIle(fileUpload:FormData ): Observable<any> {
-    httpOptions.headers.append("accept","application/json");
-    return this.http.post(
-      environment.apiUrl+'files.php/files',
+  upLoadFIle(upLoadFIle:FormData): Observable<any> {
+
+    console.log(upLoadFIle,"Antes-21");
+    // let data=new Blob(fileUpload);
+    //let file=upLoadFIle[0];
+    //let fd=new FormData();
+    //fd.set("upLoadFIle",upLoadFIle[0]);
+
+    //let formDataEntry=upLoadFIle[0];
+
+    //let dataFile=new File(new Blob(formDataEntry),"archivo.xlsx");
+    const h = {
+      headers: new HttpHeaders(
+        {"Content-Type":"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}
+      )
+    };
+    h.headers.append("Content-Disposition", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    //  httpOptions.headers.append('Content-Encoding', ' gzip, deflate, br, zstd');
+    //  httpOptions.headers.append('Accept-Encoding', 'gzip, deflate, br');
+    //console.log(fd.getAll("upLoadFIle")[0],"upLoadFIle");
+    return this.http.post(environment.apiUrl+'files.php/files',
+      upLoadFIle,
       {
-        fileUpload
-      },
-      httpOptions
+        observe: 'events'}
     );
   }
 

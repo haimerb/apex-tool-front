@@ -58,6 +58,8 @@ interface CertificatesGenerated {
 })
 
 export class Principal implements OnInit, DoCheck {
+  formData=new FormData();
+  file=File;
   options: any = {
     autoBom: false,
   };
@@ -65,16 +67,17 @@ export class Principal implements OnInit, DoCheck {
   files: any[]=[];
   maxSize= 16;
   //fileControl?: FormControl;
-  fileControl = new FormControl('', [Validators.required,MaxSizeValidator(this.maxSize * 1024)]);
+  fileControl = new FormControl('', [Validators.required,MaxSizeValidator(this.maxSize * 6024)]);
 
   form: any = {
-    uploadfile: null
+    uploadFile: null
   };
   noChangeCount=0;
   changeDetected = false;
   changeLog=new Array<string>();
   idLoader=false;
   generalNit?: string;
+  result?:string="";
   footerActive=false;
   state="";
   downloadFiles = false;
@@ -204,13 +207,19 @@ export class Principal implements OnInit, DoCheck {
     this.idLoader=false;
   }
   ngOnInit(): void {
-    this.fileControl?.valueChanges.subscribe((files: any) => {
-      console.log(files,"FILES");
+    this.fileControl.valueChanges.subscribe((files: any) => {
+      console.log(files,"FILESAAA");
       if (!Array.isArray(files)) {
         this.files = [files];
+        this.formData.append('fileUpload',this.files[0],this.files[0]?.name);
+        //this.form.uploadFile=this.files[0];
       } else {
+        console.log(files,"FILESAAA");
         this.files = files;
+        //this.form.uploadFile=this.files[0];
+        this.formData.append('fileUpload',this.files[0],this.files[0]?.name);
       }
+      //console.log(this.files,"FILES-SSSS");
     })
     this.idLoader=true;
     console.log(this.storageService.getUser(),"user");
@@ -303,30 +312,23 @@ export class Principal implements OnInit, DoCheck {
     }
     this.idLoader=false;
   }
-
   onSubmit(): void {
-
-
-
-    console.log("onSubmit");
-    //console.log(this.fileUpload.valueChanges);
-    console.log(this.fileControl.value,"VALUE");
-    console.log(this.files,"FILES2");
-
-
-    let  formData: any = new FormData();
-         formData.append('uploadFile', this.fileControl.value);
-
-    this.fIleService.upLoadFIle(formData).subscribe({
+    this.loader=true;
+    this.fIleService.upLoadFIle(this.formData).subscribe({
       next: data => {
         // this.organizations=data;
         console.log(data,"DATA");
+        if(data.code==200){
+          this.loader=false;
+        }
       },
       error: err => {
         console.log(err?.error?.message);
+        this.loader=false;
       },
       complete: () => {
         console.log("Completado");
+        this.loader=false;
       }
     }
     )
@@ -380,5 +382,9 @@ export class Principal implements OnInit, DoCheck {
   }
   goToPrincipal($myParam: string = ''): void {
     this.router?.navigate(['/landing']);
+  }
+
+  clearForm():void {
+    this.fileControl.setValue('');
   }
 }
