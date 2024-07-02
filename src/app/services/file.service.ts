@@ -14,9 +14,6 @@ const API_URL = 'http://localhost:8080/api/test/';
 })
 export class FIleService {
   constructor(private http: HttpClient) {}
-
-
-
   upLoadFIle(upLoadFIle:FormData): Observable<any> {
 
     console.log(upLoadFIle,"Antes-21");
@@ -56,21 +53,18 @@ export class FIleService {
     );
   }
 
-  getPublicContent(): Observable<any> {
-    return this.http.get(API_URL + 'all', { responseType: 'text' });
-  }
+  // setCertificate(nit:string,tipo_retencion:string,year_tribute:string,idOrganizacion:string): Observable<any> {
 
-  getUserBoard(): Observable<any> {
-    return this.http.get(API_URL + 'user', { responseType: 'text' });
-  }
-
-  getModeratorBoard(): Observable<any> {
-    return this.http.get(API_URL + 'mod', { responseType: 'text' });
-  }
-
-  getAdminBoard(): Observable<any> {
-    return this.http.get(API_URL + 'admin', { responseType: 'text' });
-  }
+  //   return this.http.post(
+  //     environment.apiUrl+'files.php/files/base',
+  //     {
+  //       nit,
+  //       tipo_retencion,
+  //       year_tribute,
+  //       idOrganizacion
+  //     }
+  //   );
+  // }
 }
 
 

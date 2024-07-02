@@ -97,6 +97,7 @@ mat-card-actions{
   align-items: center;
   justify-content: baseline;
   margin-top: auto;
+  overflow: auto;
 }
 
 .Principal

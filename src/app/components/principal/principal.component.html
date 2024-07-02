@@ -24,22 +24,28 @@
   </div>
 
 
+
+
   @if(downloadFiles) {
+
+    <Loading  *ngIf="this.isLoaderShow"></Loading >
+
+
   <div class="principal-container-process">
 
     <div class="principal-container-process-left mat-elevation-z8" >
 
-      @if(idLoader==true) {
 
-      <mat-progress-spinner
-          class="example-margin"
-          color="primary"
-          mode="indeterminate"
-          value="value"
-        >
-        </mat-progress-spinner>
-      }
-      <form name="form" class="form-generate" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
+
+      <form name="formGenerate"
+           class="form-generate"
+           (ngSubmit)="onSubmitGenerate()"
+           #f="ngForm"
+           novalidate>
+
+
+
+
       <mat-card tabindex="0" class="mat-elevation-z8" >
         <mat-card-header >
           <mat-card-subtitle></mat-card-subtitle>
@@ -51,7 +57,7 @@
 
           <mat-form-field style="margin-top: 2rem;">
             <mat-label>Certificado</mat-label>
-            <mat-select>
+            <mat-select #typeCertificate (valueChange)="changeTypeCert($event)" >
               @for (certificado of certificados; track certificado) {
                 <mat-option [value]="certificado.id_type_certificate">{{certificado.name_type}}</mat-option>
               }
@@ -67,6 +73,8 @@
                  id="nit"
                  name="nit"
                  placeholder="Ingrese Nit"
+                 [(ngModel)]="formGenerate.nit"
+                 #nit="ngModel"
                  />
                 </mat-form-field>
 
@@ -97,9 +105,9 @@
 
                 <mat-form-field>
                  <mat-label>Año</mat-label>
-                 <mat-select>
-                   @for (anio of anio; track anio) {
-                     <mat-option [value]="anio.value">{{anio.viewValue}}</mat-option>
+                 <mat-select #anioSelected (valueChange)="changeAnioCert($event)" >
+                   @for (anio of anios; track anio) {
+                     <mat-option [value]="anio.viewValue">{{anio.viewValue}}</mat-option>
                    }
                  </mat-select>
                </mat-form-field>
@@ -282,7 +290,25 @@
 }
 
 
+<!-- <mat-progress-spinner
+*ngIf="this.isLoaderShow===true"
+  class="example-margin"
+  color="primary"
+  mode="indeterminate"
+  value="value"
+>
+</mat-progress-spinner> -->
+
+
+
+
+
+
+
 </div>
 </div>
+
+
+
 
 <footer></footer>

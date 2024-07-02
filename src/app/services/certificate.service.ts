@@ -25,28 +25,43 @@ export class CertificateService {
   getTypesCertificates(): Observable<any> {
     return this.http.get(
       environment.apiUrl+'certification.php/allTypesCertificates',
-      {}
     );
   }
 
-  setCertificate(): Observable<any> {
+
+  // setBaseCertificate(nit:string,tipo_retencion:string,year_tribute:string,idOrganizacion:String): Observable<any> {
+  //   return this.http.post(
+  //     environment.apiUrl+'files.php/files/generateBase',
+  //     {
+  //       nit,
+  //       tipo_retencion,
+  //       year_tribute,
+  //       idOrganizacion
+  //     },
+  //     httpOptions
+  //   );
+  // }
+
+  setCertificate(nit:string,
+                 tipo_retencion:string,
+                 year_tribute:string,
+                 idOrganizacion:string): Observable<any> {
+
+    const hopt = {
+      //headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+      headers: new HttpHeaders({ 'Content-Type': 'text/plain' })
+    };
+    hopt.headers.append("Accept-Encoding","gzip, deflate, br");
+    hopt.headers.append("Accept","application/json");
     return this.http.post(
-      environment.apiUrl+'login.php',
-      {
-
-      },
-      httpOptions
+      environment.apiUrl+'api.php/files/base',
+      {nit,
+        tipo_retencion,
+        year_tribute,
+        idOrganizacion,
+      },hopt,
     );
   }
 
-  setBaseCertificate(): Observable<any> {
-    return this.http.post(
-      environment.apiUrl+'certification.php/generateBase',
-      {
-
-      },
-      httpOptions
-    );
-  }
 
 }
