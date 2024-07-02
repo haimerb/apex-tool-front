@@ -55,7 +55,7 @@
 }
 .Principal
 .principal-container-process-left{
-  margin-right: 1rem;
+  margin-right: 1.8rem;
   margin-left: 1rem;
   height: 45%;
   width: 40%;
@@ -76,10 +76,37 @@
   /* margin-left: 1rem; */
   /* height: 50%; */
   height: auto;
-  width: 50%;
-  margin-left: 1rem;
-  margin-right: 1rem;
+  width: auto;
+  margin-left: 1.8rem;
+  /* margin-right: 1rem; */
+  display: flex;
+  flex-direction: column;
+  /* align-items: center;
+  justify-content: center; */
 }
+
+.Principal
+.principal-container-process-right
+mat-card
+mat-card-actions{
+  /* height: 100%;
+  width: 100% ; */
+  /* height: auto !important; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: baseline;
+  margin-top: auto;
+  overflow: auto;
+}
+
+.Principal
+.principal-container-process-right
+mat-card
+mat-card-actions mat-divider{
+  width: 90% ;
+}
+
 
 /* .Principal
 .card{
@@ -128,6 +155,45 @@ mat-card-footer{
   border-bottom-right-radius: 0.4rem; */
   /* height: 0.3rem; */
   width: auto;
+
   /* box-shadow: 0.1rem 0.3rem 0.1rem #0171bb ; */
 }
 
+/* mat-card
+mat-card-actions{
+  width: 100%;
+  height: auto ;
+} */
+
+mat-card
+mat-card-title{
+  padding: 0.4rem;
+  display: flex;
+  flex-direction: row;
+}
+
+mat-selection-list{
+  width: 30rem;
+}
+
+mat-form-field {
+  width: 22rem;
+}
+
+.titles{
+  margin-bottom: 2rem;
+}
+
+mat-card
+mat-card-content
+p{
+  padding: 0.4rem;
+  /* display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between; */
+}
+
+mat-divider{
+  padding: 0.8rem;
+}

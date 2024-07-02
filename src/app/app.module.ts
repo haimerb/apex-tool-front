@@ -28,6 +28,11 @@ import {MatListModule} from '@angular/material/list';
 import {MAT_SNACK_BAR_DATA} from '@angular/material/snack-bar';
 import { HomeComponent } from './components/home/home.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { NgxMatFileInputModule } from '@angular-material-components/file-input';
+import { FileSaverModule } from 'ngx-filesaver';
+import { LoadingComponent } from './components/_loading/_loading.component';
+import { MatSnackBarModule } from "@angular/material/snack-bar";
+
 
 @NgModule({
   declarations: [
@@ -39,8 +44,8 @@ import { FooterComponent } from './components/footer/footer.component';
     LoginComponent,
     Principal,
     HomeComponent,
-    FooterComponent
-
+    FooterComponent,
+    LoadingComponent
   ],
   imports: [
     BrowserModule,
@@ -59,7 +64,10 @@ import { FooterComponent } from './components/footer/footer.component';
     MatCardModule,
     MatProgressBarModule,
     MatSelectModule,
-    MatListModule
+    MatListModule,
+    NgxMatFileInputModule,
+    FileSaverModule,
+    MatSnackBarModule
   ],
   exports: [MatButtonModule,FormsModule],
   providers: [

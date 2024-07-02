@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 const USER_KEY = 'auth-user';
 const STATE_KEY = 'state';
+const STATE_SHOW_KEY='show-loader';
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +30,8 @@ export class StorageService {
 
   public isLoggedIn(): boolean {
     const user = window.sessionStorage.getItem(USER_KEY);
-    if (user) {
+    console.log(user);
+    if (user&&user!=null) {
       return true;
     }
 
@@ -47,5 +49,20 @@ export class StorageService {
 public setStatePrincipal(state :any):void{
   window.sessionStorage.setItem(STATE_KEY, state);
 }
+
+
+public stateShowLoader(): string {
+  const state = window.sessionStorage.getItem(STATE_SHOW_KEY);
+  if(state){
+    return state;
+  }
+  return "";
+}
+
+
+public setStateShowLoader(state :any):void{
+  window.sessionStorage.setItem(STATE_SHOW_KEY, state);
+}
+
 
 }

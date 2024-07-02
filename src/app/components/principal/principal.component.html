@@ -18,37 +18,46 @@
 
   </div>
 
-  <div class="mat-typography">
+  <div class="mat-typography titles">
     <h1 *ngIf="downloadFiles"> Descarga de Archivos </h1>
     <h1 *ngIf="uploadFiles"> Carga de Archivos </h1>
   </div>
 
 
+
+
   @if(downloadFiles) {
+
+    <Loading  *ngIf="this.isLoaderShow"></Loading >
+
+
   <div class="principal-container-process">
 
     <div class="principal-container-process-left mat-elevation-z8" >
 
-      @if(idLoader==true) {
-      <mat-progress-spinner
-          class="example-margin"
-          color="primary"
-          mode="indeterminate"
-          value="value"
-        >
-        </mat-progress-spinner>
-      }
-      <mat-card tabindex="0" class="mat-elevation-z8">
-        <mat-card-header>
+
+
+      <form name="formGenerate"
+           class="form-generate"
+           (ngSubmit)="onSubmitGenerate()"
+           #f="ngForm"
+           novalidate>
+
+
+
+
+      <mat-card tabindex="0" class="mat-elevation-z8" >
+        <mat-card-header >
           <mat-card-subtitle></mat-card-subtitle>
-          <mat-card-title>Generar de Archivos</mat-card-title>
+          <mat-card-title >Generación Certificado</mat-card-title>
         </mat-card-header>
-        <mat-card-content>
+        <mat-card-content >
 
+          <mat-divider></mat-divider>
 
-          <mat-form-field>
+          <mat-form-field style="margin-top: 2rem;">
             <mat-label>Certificado</mat-label>
-            <mat-select>
+            <mat-select #typeCertificate (valueChange)="changeTypeCert($event)" >
               @for (certificado of certificados; track certificado) {
                 <mat-option [value]="certificado.id_type_certificate">{{certificado.name_type}}</mat-option>
               }
@@ -64,6 +73,8 @@
                  id="nit"
                  name="nit"
                  placeholder="Ingrese Nit"
+                 [(ngModel)]="formGenerate.nit"
+                 #nit="ngModel"
                  />
                 </mat-form-field>
 
@@ -80,7 +91,7 @@
 
                 <br>
 
-                 <mat-form-field>
+                 <!-- <mat-form-field>
                   <mat-label>Favorite food</mat-label>
                   <mat-select>
                     @for (org of organizations; track org) {
@@ -90,23 +101,24 @@
                 </mat-form-field>
 
 
-                <br>
+                <br> -->
 
                 <mat-form-field>
                  <mat-label>Año</mat-label>
-                 <mat-select>
-                   @for (anio of anio; track anio) {
-                     <mat-option [value]="anio.value">{{anio.viewValue}}</mat-option>
+                 <mat-select #anioSelected (valueChange)="changeAnioCert($event)" >
+                   @for (anio of anios; track anio) {
+                     <mat-option [value]="anio.viewValue">{{anio.viewValue}}</mat-option>
                    }
                  </mat-select>
                </mat-form-field>
 
 
-
-          <p class="mat-typography">Seleccione las opciones para generar su certificado</p>
-          <!-- <p>{{ longText }}</p> -->
-
-
+               <mat-divider></mat-divider>
+          <div class="mat-typography">
+            <p>
+              Seleccione las opciones para generar su certificado
+            </p>
+          </div>
           <mat-divider></mat-divider>
 
         </mat-card-content>
@@ -120,7 +132,7 @@
         </mat-card-footer>
       </mat-card>
 
-
+      </form>
     </div>
 
     <div class="principal-container-process-center" >
@@ -129,22 +141,10 @@
 
     <div class="principal-container-process-right mat-elevation-z8">
 
-      <!-- <div class="card">
-        <h4 class="card-header">Resultados</h4>
-        <div class="card-body">
-
-          <h5 class="card-title">Archivos generados</h5>
-          <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-          <a href="#" class="btn btn-primary">Descargar</a>
-
-
-        </div>
-      </div> -->
-
       <mat-card >
-        <mat-card-header>
-          <mat-card-subtitle>Archivos</mat-card-subtitle>
-          <mat-card-title>Resultados</mat-card-title>
+        <mat-card-header style="margin-bottom: 1rem;">
+          <mat-card-subtitle></mat-card-subtitle>
+          <mat-card-title>Certificados Generados</mat-card-title>
         </mat-card-header>
         <mat-card-content>
 
@@ -155,9 +155,8 @@
 
           </li>
 
-        </mat-card-content>
-        <mat-card-actions>
-          <!-- <button mat-button>Cargar</button>
+
+            <!-- <button mat-button>Cargar</button>
           <button mat-button>Limpiar</button> -->
 
 
@@ -167,18 +166,40 @@
             </mat-list-option>
           </mat-selection-list> -->
 
-          <mat-selection-list #certificateG>
-            <mat-list-option *ngFor="let certificateG of certificatesGenerated">
-              {{certificateG.nombre}}
+          <mat-selection-list #certificateG (selectionChange)="selectedItemCert(certificateG.selectedOptions.selected)" [multiple]="false">
+            <mat-list-option  *ngFor="let certificateG of certificatesGenerated" [value]="certificateG">
+              <div class="mat-typography">
+                <mat-icon aria-hidden="false" aria-label="Example home icon" color="primary" fontIcon="document">
+                  {{certificateG.nombre+" - "+certificateG?.url_assoc_file}}
+                </mat-icon>
+                <h3>
+                {{certificateG.nombre+" - "+certificateG?.url_assoc_file}}
+              </h3>
+              </div>
             </mat-list-option>
+            <!-- @for (certificateG of certificatesGenerated; track certificateG) {
+              <mat-list-option [value]="certificateG.id_certificados_generado">{{certificateG.nombre+" - "+certificateG?.url_assoc_file}}</mat-list-option>
+            } -->
           </mat-selection-list>
-
-
-
-          <p>
+          <mat-divider></mat-divider>
+          <!-- <p>
             Opciones seleccionadas: {{certificateG.selectedOptions.selected.length}}
-          </p>
+          </p> -->
+          <div class="mat-typography">
+            Opciones seleccionadas: {{certificateG.selectedOptions.selected.length}}
+          </div>
+          <div class="mat-typography">
+            <h3> {{this.certificateSelected?.nombre}} </h3>
+            <h3> {{this.certificateSelected?.url_assoc_file}} </h3>
+          </div>
 
+        </mat-card-content>
+
+        <mat-card-actions >
+          <mat-divider></mat-divider>
+
+
+        <button mat-button color="primary" (click)="decargar()">Descargar</button>
         </mat-card-actions>
 
         <mat-card-footer>
@@ -195,7 +216,7 @@
 @if(uploadFiles) {
   <div class="principal-container-process" >
 
-    <div class="principal-container-process-center"  style="width: 100%; padding: 2%;">
+    <div class="principal-container-process-center"  >
       <!-- <mat-divider vertical style="height:100%"></mat-divider> -->
 
       <mat-card tabindex="0" class="mat-elevation-z8">
@@ -203,6 +224,59 @@
           <mat-card-subtitle>Manejo de archivos</mat-card-subtitle>
           <mat-card-title>Carga de Archivos</mat-card-title>
         </mat-card-header>
+
+        <mat-card-content>
+
+
+          <form name="form" (ngSubmit)="onSubmit()" #f="ngForm" enctype="multipart/form-data" >
+
+
+            <!-- <mat-form-field>
+              <ngx-mat-file-input
+               accept=".xlsx"
+               [(ngModel)]="form.uploadFile"
+               [formControl]="form.uploadFile"
+              >
+              </ngx-mat-file-input>
+           </mat-form-field> -->
+
+           <mat-form-field>
+            <ngx-mat-file-input
+              [formControl]="fileControl"
+              accept=".xlsx"
+              name="fileUpload"
+              id="fileUpload"
+
+             >
+              <mat-icon ngxMatFileInputIcon >folder</mat-icon>
+            </ngx-mat-file-input>
+          </mat-form-field>
+
+
+          <mat-divider></mat-divider>
+          <div class="title">Selección de acrchivo(s):</div>
+          <div class="value">
+            <ul>
+              <li *ngFor="let item of files">{{item?.name}}</li>
+            </ul>
+          </div>
+
+
+
+          <mat-card-actions>
+            <button mat-button color="primary" type="submit">Cargar</button>
+            <button mat-button (click)="clearForm()">Limpiar</button>
+          </mat-card-actions>
+
+
+          </form>
+
+
+
+        </mat-card-content>
+
+
+
 
       </mat-card>
 
@@ -216,7 +290,25 @@
 }
 
 
+<!-- <mat-progress-spinner
+*ngIf="this.isLoaderShow===true"
+  class="example-margin"
+  color="primary"
+  mode="indeterminate"
+  value="value"
+>
+</mat-progress-spinner> -->
+
+
+
+
+
+
+
 </div>
 </div>
+
+
+
 
 <footer></footer>

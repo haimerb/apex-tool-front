@@ -1,5 +1,6 @@
 export const environment = {
-  production: false,
+  production: true,
   apiUrl: 'http://localhost:8000/api/',
-  assertsPath:'./assets/'
+  assertsPath:'./assets/',
+  downloadPathApi:'http://localhost:8000/api/tmp/mpdf/outfiles/'
 };
