@@ -61,7 +61,7 @@ export class Landing implements OnInit
   //   this.tutorialService.getAll().subscribe({
   //     next: (data) => {
   //       this.tutorials = data;
-  //       console.log(data);
+  //       //console.log(data);
   //     },
   //     error: (e) => console.error(e)
   //   });
@@ -81,7 +81,7 @@ export class Landing implements OnInit
   // removeAllTutorials(): void {
   //   this.tutorialService.deleteAll().subscribe({
   //     next: (res) => {
-  //       console.log(res);
+  //       //console.log(res);
   //       this.refreshList();
   //     },
   //     error: (e) => console.error(e)
@@ -95,7 +95,7 @@ export class Landing implements OnInit
   //   this.tutorialService.findByTitle(this.title).subscribe({
   //     next: (data) => {
   //       this.tutorials = data;
-  //       console.log(data);
+  //       //console.log(data);
   //     },
   //     error: (e) => console.error(e)
   //   });
