@@ -1,7 +1,11 @@
+//import { RowItem } from './../_dialog/_dialog.component';
 import { CertificateService } from './../../services/certificate.service';
 import { OrganizationService } from './../../services/organization.service';
-import { AppComponent } from './../../app.component';
-import { Component, Input, OnInit, OnChanges,ViewChild,AfterViewInit, DoCheck, SimpleChanges, Output  } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  DoCheck,
+  ChangeDetectionStrategy  } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { StorageService } from '../../services/storage.service';
@@ -15,9 +19,21 @@ import { environment } from '../../../environments/environment.development';
 import { LoadingComponent } from '../_loading/_loading.component';
 
 import { MatSnackBar } from '@angular/material/snack-bar';
+import {
+  MatDialog
+} from '@angular/material/dialog';
+import { DialogComponent } from '../_dialog/_dialog.component';
+export interface RowItem {
+  code:number;
+  id_certificate_data:string;
+  nit:string;
+  nombreConcepto:string;
+  razonSocial:string;
+}
 
-
-//import { saveAs } from 'file-saver';
+export interface DialogData {
+  rows:RowItem[];
+}
 
 interface Food {
   value: string;
@@ -57,9 +73,12 @@ interface CertificatesGenerated {
   selector: 'principal',
   templateUrl: './principal.component.html',
   styleUrls: ['./principal.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class Principal implements OnInit, DoCheck {
+  dataRows?:RowItem[];
+  rows?:RowItem[];
   isLoaderShow:boolean;
 
   oldIsLoaderShow=false;
@@ -95,12 +114,15 @@ export class Principal implements OnInit, DoCheck {
   state="";
   stateShowLoader="";
   downloadFiles = false;
+  profile = false;
   oldDownloadFiles = false;
   uploadFiles=false;
   home=false;
   loader=false;
   typesOfShoes: string[] = ['Boots', 'Clogs', 'Loafers', 'Moccasins', 'Sneakers'];
   idOrganizacion:string="0";
+  namesUser:string="";
+  lastName:string="";
    anios: Anio[] = [
     {value: '0', viewValue: '2020'},
     {value: '0', viewValue: '2021'},
@@ -115,6 +137,7 @@ export class Principal implements OnInit, DoCheck {
   anioSelected=0;
 
   constructor(
+    public dialog: MatDialog,
     private snackBar: MatSnackBar,
     private fIleService : FIleService,
     private OrganizationService: OrganizationService,
@@ -124,19 +147,26 @@ export class Principal implements OnInit, DoCheck {
     private storageService: StorageService,
   ) {
     this.home =true;
-    this.isLoaderShow=true;
-    //this.isLoaderShow=false;
-    // this.fileControl = new FormControl(this.files, [
-    //   Validators.required,
-    //   MaxSizeValidator(this.maxSize * 1024)
-    // ])
+    this.isLoaderShow=false;
   }
 
+  openDialog(): void {
+    const dialogRef = this.dialog.open(DialogComponent, {
+      data: {rows: this.dataRows as RowItem[]},
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      ////console.log('The dialog was closed');
+      this.rows = result;
+    });
+  }
+
+
   setLoaderShow():void{
-    console.log("setLoaderShow: "+this.isLoaderShow+" from ");
+    ////console.log("setLoaderShow: "+this.isLoaderShow+" from ");
     this.isLoaderShow=true;
     this.storageService.setStateShowLoader(true);
-    console.log("setLoaderShow: "+this.isLoaderShow+" to ");
+    ////console.log("setLoaderShow: "+this.isLoaderShow+" to ");
   }
   setLoaderHide():void{
       this.isLoaderShow=false;
@@ -148,7 +178,7 @@ export class Principal implements OnInit, DoCheck {
     if (this.downloadFiles!== this.oldDownloadFiles) {
       //this.isLoaderShow=true;
       this.changeDetected = true;
-      this.changeLog.push(`DoCheck: Hero name changed to "${this.downloadFiles}" from "${this.oldDownloadFiles}"`);
+      //this.changeLog.push(`DoCheck: Hero name changed to "${this.downloadFiles}" from "${this.oldDownloadFiles}"`);
       this.oldDownloadFiles = this.downloadFiles;
       this.generalNit=this.storageService.getUser()?.nit;
       this.state=this.storageService.statePrincipal();
@@ -160,48 +190,52 @@ export class Principal implements OnInit, DoCheck {
           this.downloadFiles=true;
           this.uploadFiles=false;
           this.home=false;
+          this.profile=false;
+
           this.CetificateService.getTypesCertificates().subscribe({
             next: data => {
-              console.log(data);
+              ////console.log(data);
               this.certificados=data;
             },
             error: err => {
               // this.errorMessage = err?.error?.message;
               // this.isLoginFailed = true;
-              console.log(err?.error?.message);
+              ////console.log(err?.error?.message);
             },complete: () => {
-              this.isLoaderShow=false;
-              console.log("Completado");
-              this.isLoaderShow=false;
+              //this.isLoaderShow=false;
+              ////console.log("Completado");
+              //this.isLoaderShow=false;
             }
           });
+
           this.OrganizationService.getAllOrganizations(this.generalNit||"").subscribe({
             next: data => {
               this.organizations=data;
             },
             error: err => {
-              console.log(err?.error?.message);
-              return;
+              ////console.log(err?.error?.message);
+              //return;
             },complete: () => {
-              this.isLoaderShow=false;
-              console.log("Completado");
-              this.isLoaderShow=false;
+              //this.isLoaderShow=false;
+              ////console.log("Completado");
+              //this.isLoaderShow=false;
             }
           });
-          this.CetificateService.allCertificatesByOrg("1").subscribe({
+
+          this.CetificateService.allCertificatesByOrg(this.idOrganizacion).subscribe({
             next: data => {
               this.certificatesGenerated=data;
-              //console.log(this.certificatesGenerated);
-              //console.log(data);
+              //////console.log(this.certificatesGenerated);
+              //////console.log(data);
             },
             error: err => {
               // this.errorMessage = err?.error?.message;
               // this.isLoginFailed = true;
-              console.log(err?.error?.message);
+              ////console.log(err?.error?.message);
             },complete: () => {
-              this.isLoaderShow=false;
-              console.log("Completado");
-              this.isLoaderShow=false;
+              //this.isLoaderShow=false;
+              ////console.log("Completado");
+              //this.isLoaderShow=false;
             }
           });
 
@@ -210,26 +244,33 @@ export class Principal implements OnInit, DoCheck {
           this.downloadFiles=false;
           this.uploadFiles=true;
           this.home=false;
+          this.profile=false;
         }
         if(this.state=="home"){
           this.downloadFiles=false;
           this.uploadFiles=false;
+          this.profile=false;
           this.home=true;
         }
-
+        if(this.state=="profile"){
+          this.downloadFiles=false;
+          this.uploadFiles=false;
+          this.home=false;
+          this.profile=true;
+        }
       }
 
     }
 
     if(this.isLoaderShow!==this.oldIsLoaderShow){
       this.changeDetected = true;
-      this.changeLog.push(`DoCheck: Hero name changed to "${this.isLoaderShow}" from "${this.oldIsLoaderShow}"`);
+      //this.changeLog.push(`DoCheck: Hero name changed to "${this.isLoaderShow}" from "${this.oldIsLoaderShow}"`);
       this.oldIsLoaderShow=this.isLoaderShow;
       this.stateShowLoader=this.storageService.stateShowLoader();
 
-      if(this.stateShowLoader=="true"){
+      if(this.stateShowLoader==="true"){
         this.isLoaderShow=true;
-      }else if(this.stateShowLoader=="false"){
+      }else if(this.stateShowLoader==="false"){
         this.isLoaderShow=false;
       }else{
         this.isLoaderShow=false;
@@ -241,115 +282,134 @@ export class Principal implements OnInit, DoCheck {
     } else {
         // log that hook was called when there was no relevant change.
         const count = this.noChangeCount += 1;
-        const noChangeMsg = `DoCheck called ${count}x when no change to hero or power`;
+        //const noChangeMsg = `DoCheck called ${count}x when no change to hero or power`;
         if (count === 1) {
           // add new "no change" message
-          this.changeLog.push(noChangeMsg);
+          //this.changeLog.push(noChangeMsg);
         } else {
           // update last "no change" message
-          this.changeLog[this.changeLog.length - 1] = noChangeMsg;
+          //this.changeLog[this.changeLog.length - 1] = noChangeMsg;
         }
     }
     this.changeDetected = false;
-    console.log(this.changeLog,"Change Log");
+    //////console.log(this.changeLog,"Change Log");
     //this.isLoaderShow=false;
   }
   ngOnInit(): void {
-    this.isLoaderShow=false;
+
+    //this.isLoaderShow=false;
+
     this.fileControl.valueChanges.subscribe((files: any) => {
-      console.log(files,"FILESAAA");
+      this.files=[];
+      //////console.log(files,"FILESAAA");
       if (!Array.isArray(files)) {
         this.files = [files];
         this.formData.append('fileUpload',this.files[0],this.files[0]?.name);
         //this.form.uploadFile=this.files[0];
       } else {
-        console.log(files,"FILESAAA");
+        //////console.log(files,"FILESAAA");
         this.files = files;
         //this.form.uploadFile=this.files[0];
         this.formData.append('fileUpload',this.files[0],this.files[0]?.name);
       }
-      //console.log(this.files,"FILES-SSSS");
-    })
-    this.isLoaderShow=true;
-    console.log(this.storageService.getUser(),"user");
+      //////console.log(this.files,"FILES-SSSS");
+    });
+
+    //this.isLoaderShow=true;
+    ////console.log(this.storageService.getUser(),"user");
+
     this.generalNit=this.storageService.getUser()?.nit;
-    this.idOrganizacion=this.storageService.getUser()?.id_organization
+    this.idOrganizacion=this.storageService.getUser()?.id_organization;
+    this.namesUser=this.storageService.getUser()?.names;
+    this.lastName=this.storageService.getUser()?.lastname;
+
     //this.appComponent.footerActive=true;
     this.state=this.storageService.statePrincipal();
 
     if(this.state!=""){
+
       if(this.state=="downloadFiles"){
         this.downloadFiles=true;
         this.uploadFiles=false;
+        this.profile=false;
         this.home=false;
+
         this.CetificateService.getTypesCertificates().subscribe({
           next: data => {
             this.certificados=data;
-            this.isLoaderShow=false;
-            console.log(data);
+            //this.isLoaderShow=false;
+            ////console.log(data);
           },
           error: err => {
             // this.errorMessage = err?.error?.message;
             // this.isLoginFailed = true;
-            console.log(err?.error?.message);
+            ////console.log(err?.error?.message);
             //*-----this.isLoaderShow=false;
             return;
           },
           complete: () => {
-            this.isLoaderShow=false;
-            console.log("Completado");
-            this.isLoaderShow=false;
+            //this.isLoaderShow=false;
+            ////console.log("Completado");
+            //this.isLoaderShow=false;
             return;
           }
         });
         this.OrganizationService.getAllOrganizations(this.generalNit||"").subscribe({
           next: data => {
             this.organizations=data;
-            this.isLoaderShow=false;
-            return;
+            //this.isLoaderShow=false;
+            //return;
           },
           error: err => {
-            console.log(err?.error?.message);
+            ////console.log(err?.error?.message);
             //*-----this.isLoaderShow=false;
-            return;
+            //return;
           },
           complete: () => {
-            this.isLoaderShow=false;
-            console.log("Completado");
-            this.isLoaderShow=false;
-            return;
+            //this.isLoaderShow=false;
+            ////console.log("Completado");
+            //this.isLoaderShow=false;
+            //return;
           }
         });
         //*-----this.isLoaderShow=false;
-        this.CetificateService.allCertificatesByOrg("1").subscribe({
+        this.CetificateService.allCertificatesByOrg(this.idOrganizacion).subscribe({
           next: data => {
             this.certificatesGenerated=data;
-            //console.log(this.certificatesGenerated);
-            //console.log(data);
+            //////console.log(this.certificatesGenerated);
+            //////console.log(data);
           },
           error: err => {
             // this.errorMessage = err?.error?.message;
             // this.isLoginFailed = true;
-            console.log(err?.error?.message);
+            ////console.log(err?.error?.message);
           },complete: () => {
-            this.isLoaderShow=false;
-            console.log("Completado");
-            this.isLoaderShow=false;
+            //this.isLoaderShow=false;
+            ////console.log("Completado");
+            //this.isLoaderShow=false;
           }
         });
 
       }
       if(this.state=="uploadFiles"){
         this.downloadFiles=false;
+        this.profile=false;
         this.uploadFiles=true;
         this.home=false;
       }
       if(this.state=="home"){
         this.downloadFiles=false;
         this.uploadFiles=false;
+        this.profile=false;
         this.home=true;
       }
-      this.isLoaderShow=false;
+      if(this.state=="profile"){
+        this.downloadFiles=false;
+        this.uploadFiles=false;
+        this.home=false;
+        this.profile=true;
+      }
+      //this.isLoaderShow=false;
     }
 
     //this.retrieveTutorials();
@@ -360,31 +420,73 @@ export class Principal implements OnInit, DoCheck {
     }else{
       this.router.navigate(['/landing']);
     }
-    this.isLoaderShow=false;
+    //this.isLoaderShow=false;
   }
-  onSubmit(): void {
-    this.loader=true;
-    this.fIleService.upLoadFIle(this.formData).subscribe({
+  async onSubmit(): Promise<void> {
+    this.setLoaderShow();
+
+    ////console.log("Arr",this.files);
+    const {name}=this.files[0];
+
+    const upload= this.fIleService.upLoadFIle(this.formData).subscribe({
       next: data => {
-        // this.organizations=data;
-        console.log(data,"DATA");
-        if(data.code==200){
-          this.loader=false;
+
+        if(data?.body?.creation?.code==200){
+          ////console.log(data,"upLoadFIle-DATAA");
+          const tmpDataRows=data?.body?.rows_proocessed;
+
+          tmpDataRows.forEach((value:any) => {
+            //////console.log(JSON.stringify(value));
+            let item=value;
+            this.dataRows?.push(
+             value as RowItem
+            );
+          });
+          ////console.log(JSON.stringify(this.dataRows),"dataRows");
+
+
+          //////console.log(this.dataRows);
+          this.openDialog();
+        }else {
+          this.setLoaderHide();
         }
       },
       error: err => {
-        console.log(err?.error?.message);
-        this.loader=false;
+        ////console.log(err?.error?.message);
+        this.setLoaderHide();
       },
       complete: () => {
-        console.log("Completado");
-        this.loader=false;
+        ////console.log("Completado");
+        this.setLoaderHide();
       }
     }
-    )
+    );
+  //   this.setLoaderShow();
+
+
+  //   await this.fIleService.readFIle(name).subscribe({
+  //     next: data => {
+  //       //////console.log(data,"fileProcesate-DATA");
+  //     if(data?.code==200){
+  //         ////console.log(data,"fileProcesate-DATA");
+  //         this.dataRows=data?.rows_proocessed;
+  //         this.openDialog();
+  //       }else {
+  //         this.setLoaderHide();
+  //       }
+  //     },
+  //     error: err => {
+  //       ////console.log(err?.error?.message);
+  //       this.setLoaderHide();
+  //     },
+  //     complete: () => {
+  //       ////console.log("Completado");
+  //       this.setLoaderHide();
+  //     }
+
+  // });
+
   }
-
-
 
   onSubmitGenerate(): void {
     //this.isLoaderShow=true;
@@ -407,28 +509,30 @@ export class Principal implements OnInit, DoCheck {
 
 
           if(data?.code!=200){
-            console.log("Error: "+data?.message);
+            ////console.log("Error: "+data?.message);
             this.setLoaderHide();
             this.snackBar.open(data?.message,"Cerrar");
             //this.loader=false;
           }else{
-            console.log(data,"DATA");
+            ////console.log(data,"DATA");
             //this.setLoaderHide();
 
             this.snackBar.open(data?.message,"Cerrar").onAction().subscribe(() => {
               this.CetificateService.allCertificatesByOrg("1").subscribe({
                 next: data => {
                   this.certificatesGenerated=data;
-                  //console.log(this.certificatesGenerated);
-                  //console.log(data);
+                  //////console.log(this.certificatesGenerated);
+                  //////console.log(data);
                 },
                 error: err => {
                   // this.errorMessage = err?.error?.message;
                   // this.isLoginFailed = true;
-                  console.log(err?.error?.message);
+                  ////console.log(err?.error?.message);
+                  this.setLoaderHide();
                 },complete: () => {
+                  this.setLoaderHide();
                   this.isLoaderShow=false;
-                  console.log("Completado");
+                  ////console.log("Completado");
                   this.isLoaderShow=false;
                 }
               });
@@ -437,12 +541,12 @@ export class Principal implements OnInit, DoCheck {
 
         },
         error: err => {
-          console.log(err?.error?.message);
+          ////console.log(err?.error?.message);
           this.snackBar.open(err?.error?.message,"Cerrar");
           //this.isLoaderShow=false;
         },
         complete: () => {
-          console.log("Completado");
+          ////console.log("Completado");
           this.setLoaderHide();
 
           //this.isLoaderShow=false;
@@ -454,8 +558,8 @@ export class Principal implements OnInit, DoCheck {
 
   selectedItemCert(select: MatListOption[]): void {
     this.certificateSelected=select[0].value;
-    console.log(JSON.stringify(this.certificateSelected));
-    //console.log(this.certificateSelected[0]);
+    ////console.log(JSON.stringify(this.certificateSelected));
+    //////console.log(this.certificateSelected[0]);
   }
 
   // selectedItemCertSelect(): CertificatesGenerated {
@@ -463,13 +567,13 @@ export class Principal implements OnInit, DoCheck {
   //   //return new CertificateGenerateItem(this.certificateSelected[0]);
   // }
   changeTypeCert($event:any): void {
-    console.log($event);
+    ////console.log($event);
     this.typeCertSelected=$event;
     this.formGenerate.tipo_retencion=$event
   }
 
   changeAnioCert($event:any): void {
-    console.log($event);
+    ////console.log($event);
     this.anioSelected=$event;
     this.formGenerate.year_tribute=$event;
   }
@@ -487,6 +591,7 @@ export class Principal implements OnInit, DoCheck {
     this.downloadFiles=true;
     this.home=false;
     this.uploadFiles=false;
+    this.profile=false;
     this.storageService.setStatePrincipal("downloadFiles");
     this.isLoaderShow=false;
   }
@@ -494,6 +599,7 @@ export class Principal implements OnInit, DoCheck {
     this.downloadFiles=false;
     this.home=false;
     this.uploadFiles=true;
+    this.profile=false;
     this.storageService.setStatePrincipal("uploadFiles");
   }
 
@@ -501,7 +607,15 @@ export class Principal implements OnInit, DoCheck {
     this.downloadFiles=false;
     this.home=true;
     this.uploadFiles=false;
+    this.profile=false;
     this.storageService.setStatePrincipal("home");
+  }
+  activeProfile():void{
+    this.downloadFiles=false;
+    this.home=false;
+    this.uploadFiles=false;
+    this.profile=true;
+    this.storageService.setStatePrincipal("profile");
   }
 
   exit(): void{
