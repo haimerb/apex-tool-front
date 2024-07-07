@@ -3,14 +3,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AddTutorialComponent } from './components/add-tutorial/add-tutorial.component';
-import { TutorialDetailsComponent } from './components/tutorial-details/tutorial-details.component';
-import { TutorialsListComponent } from './components/tutorials-list/tutorials-list.component';
 import { Landing } from './components/landing/landing.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { MatButtonModule } from '@angular/material/button';
@@ -32,20 +30,20 @@ import { NgxMatFileInputModule } from '@angular-material-components/file-input';
 import { FileSaverModule } from 'ngx-filesaver';
 import { LoadingComponent } from './components/_loading/_loading.component';
 import { MatSnackBarModule } from "@angular/material/snack-bar";
-
+import { ProfileComponent } from './components/profile/profile.component';
+import {MatDialogModule} from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
     AppComponent,
     AddTutorialComponent,
-    TutorialDetailsComponent,
-    TutorialsListComponent,
     Landing,
     LoginComponent,
     Principal,
     HomeComponent,
     FooterComponent,
-    LoadingComponent
+    LoadingComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,
@@ -67,7 +65,8 @@ import { MatSnackBarModule } from "@angular/material/snack-bar";
     MatListModule,
     NgxMatFileInputModule,
     FileSaverModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatDialogModule
   ],
   exports: [MatButtonModule,FormsModule],
   providers: [
