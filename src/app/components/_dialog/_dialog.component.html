@@ -1,0 +1,16 @@
+<h2 mat-dialog-title>Elementos Insertados</h2>
+<mat-dialog-content>This dialog showcases the title, close, content and actions elements.
+
+  <mat-list role="list">
+  @for (row of data.rows; track row) {
+    <!-- //<mat-option [value]="certificado.id_type_certificate">{{certificado.name_type}}</mat-option> -->
+    <mat-list-item role="listitem">
+      ID {{row.id_certificate_data}} | {{row.nit}}
+    </mat-list-item>
+  }
+
+</mat-list>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cerrar</button>
+</mat-dialog-actions>
