@@ -8,10 +8,15 @@
       src="{{this.getAssetsENV()}}logoapex.png"
       alt="logo"/>
 
+      <mat-divider vertical style="margin-left: 0.8rem; margin-right: 0.8rem;"></mat-divider>
       <button mat-button color="#fff" (click)="activeHome()">Inicio</button>
-      <button mat-button color="#fff">Cambiar Password</button>
+      <mat-divider vertical style="margin-left: 0.8rem; margin-right: 0.8rem;"></mat-divider>
+      <button mat-button color="#fff" (click)="activeProfile()">Perfil</button>
+      <mat-divider vertical style="margin-left: 0.8rem; margin-right: 0.8rem;"></mat-divider>
       <button mat-button (click)="activeUploadFiles()">Cargar archivos</button>
+      <mat-divider vertical style="margin-left: 0.8rem; margin-right: 0.8rem;"></mat-divider>
       <button mat-button (click)="activeDownloadFiles()">Descarga de cetificados</button>
+      <mat-divider vertical style="margin-left: 0.8rem; margin-right: 0.8rem;"></mat-divider>
       <button mat-button (click)="exit()">Salir</button>
 
 
@@ -28,10 +33,14 @@
 
   @if(downloadFiles) {
 
+
+
+
     <Loading  *ngIf="this.isLoaderShow"></Loading >
 
 
   <div class="principal-container-process">
+
 
     <div class="principal-container-process-left mat-elevation-z8" >
 
@@ -289,6 +298,10 @@
    <home title="TITULAZO"/>
 }
 
+@if (profile) {
+
+  <profile [names]="this.namesUser" [lastNames]="this.lastName"/>
+}
 
 <!-- <mat-progress-spinner
 *ngIf="this.isLoaderShow===true"
