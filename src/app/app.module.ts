@@ -33,6 +33,22 @@ import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { ProfileComponent } from './components/profile/profile.component';
 import {MatDialogModule} from '@angular/material/dialog';
 
+import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { MatDatepicker, MatDatepickerModule } from '@angular/material/datepicker';
+
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'MM/YYYY',
+  },
+  display: {
+    dateInput: 'MM/YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -66,11 +82,15 @@ import {MatDialogModule} from '@angular/material/dialog';
     NgxMatFileInputModule,
     FileSaverModule,
     MatSnackBarModule,
-    MatDialogModule
+    MatDialogModule,
+    MatDatepicker,
+    MatDatepickerModule
   ],
   exports: [MatButtonModule,FormsModule],
   providers: [
-    provideAnimationsAsync()
+    provideAnimationsAsync(),
+    {provide: MAT_DATE_LOCALE, useValue: 'es-ES'},
+    provideMomentDateAdapter(MY_FORMATS),
   ],
   bootstrap: [AppComponent]
 })
