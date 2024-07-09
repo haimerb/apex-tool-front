@@ -36,3 +36,15 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 } */
 
 
+/* mat-button
+mat-primary,
+mat-raised-button
+mat-primary {
+  color: #0171bb;
+}
+*/
+
+/* mat-button
+.mat-primary {
+  color: #0171bb;
+} */

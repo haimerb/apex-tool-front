@@ -1,28 +1,29 @@
-//import { RowItem } from './../_dialog/_dialog.component';
 import { CertificateService } from './../../services/certificate.service';
 import { OrganizationService } from './../../services/organization.service';
 import {
   Component,
   OnInit,
   DoCheck,
-  ChangeDetectionStrategy  } from '@angular/core';
+  ChangeDetectionStrategy,
+  ViewEncapsulation} from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { StorageService } from '../../services/storage.service';
-
 import { FormControl,Validators } from '@angular/forms';
-import { AcceptValidator, MaxSizeValidator } from '@angular-material-components/file-input';
+import { MaxSizeValidator } from '@angular-material-components/file-input';
 import { MatListOption } from '@angular/material/list';
 import { CertificateGenerateItem } from '../../models/certificateGenerate.model';
 import { FIleService } from '../../services/file.service';
 import { environment } from '../../../environments/environment.development';
-import { LoadingComponent } from '../_loading/_loading.component';
-
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   MatDialog
 } from '@angular/material/dialog';
 import { DialogComponent } from '../_dialog/_dialog.component';
+import * as _moment from 'moment';
+import {default as _rollupMoment, Moment} from 'moment';
+import 'moment/locale/es';
+import { MatDatepicker } from '@angular/material/datepicker';
 export interface RowItem {
   code:number;
   id_certificate_data:string;
@@ -30,34 +31,28 @@ export interface RowItem {
   nombreConcepto:string;
   razonSocial:string;
 }
-
 export interface DialogData {
   rows:RowItem[];
 }
-
-interface Food {
-  value: string;
-  viewValue: string;
-}
-
 interface Anio {
   value: string;
   viewValue: string;
 }
-
+interface City {
+  value: string;
+  viewValue: string;
+}
 interface Centificado {
   id_type_certificate: string;
   name_type: string;
   description:string;
 }
-
 interface Organization {
   id_organization: string;
   name: string;
   nit:string;
   dv:string;
 }
-
 interface CertificatesGenerated {
   id_certificados_generado:string;
   tipo_certificado:string;
@@ -68,22 +63,23 @@ interface CertificatesGenerated {
   dv:string;
   url_assoc_file:string;
 }
-
+const moment = _rollupMoment || _moment;
 @Component({
   selector: 'principal',
   templateUrl: './principal.component.html',
   styleUrls: ['./principal.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
-
 export class Principal implements OnInit, DoCheck {
+  date = new FormControl(moment());
+  dateSince = new FormControl(moment());
+  dateUntil = new FormControl(moment());
   dataRows?:RowItem[];
   rows?:RowItem[];
   isLoaderShow:boolean;
-
   oldIsLoaderShow=false;
   showLoader:boolean=false;
-
   formData=new FormData();
   file=File;
   options: any = {
@@ -92,9 +88,7 @@ export class Principal implements OnInit, DoCheck {
   certificateSelected?:CertificateGenerateItem;
   files: any[]=[];
   maxSize= 16;
-  //fileControl?: FormControl;
   fileControl = new FormControl('', [Validators.required,MaxSizeValidator(this.maxSize * 6024)]);
-
   form: any = {
     uploadFile: null
   };
@@ -102,7 +96,10 @@ export class Principal implements OnInit, DoCheck {
     nit:null,
     tipo_retencion:null,
     year_tribute:null,
-    idOrganizacion:null
+    idOrganizacion:null,
+    city:null,
+    rangeSince:null,
+    rangeUntil:null
   }
   noChangeCount=0;
   changeDetected = false;
@@ -125,9 +122,18 @@ export class Principal implements OnInit, DoCheck {
   lastName:string="";
    anios: Anio[] = [
     {value: '0', viewValue: '2020'},
-    {value: '0', viewValue: '2021'},
-    {value: '0', viewValue: '2022'},
-    {value: '0', viewValue: '2023'},
+    {value: '1', viewValue: '2021'},
+    {value: '2', viewValue: '2022'},
+    {value: '3', viewValue: '2023'},
+    {value: '4', viewValue: '2024'},
+  ];
+  cities: City[] = [
+    {value: '0', viewValue: 'Medellin'},
+    {value: '1', viewValue: 'Bogota'},
+    {value: '2', viewValue: 'Barranquilla'},
+    {value: '3', viewValue: 'Cali'},
+    {value: '4', viewValue: 'Cartagena'},
+    {value: '5', viewValue: 'Tolima'}
   ];
   certificados?: Centificado[];
   organizations?: Organization[];
@@ -135,6 +141,7 @@ export class Principal implements OnInit, DoCheck {
   currentIndex = -1;
   typeCertSelected=0;
   anioSelected=0;
+  citySelected=0;
 
   constructor(
     public dialog: MatDialog,
@@ -148,6 +155,67 @@ export class Principal implements OnInit, DoCheck {
   ) {
     this.home =true;
     this.isLoaderShow=false;
+  }
+
+  transformMonth(numMont:number):string{
+
+    return "";
+  }
+
+  setMonthAndYear(normalizedMonthAndYear: Moment, datepicker: MatDatepicker<Moment>) {
+    const ctrlValue = this.date.value ?? moment();
+    ctrlValue.month(normalizedMonthAndYear.month());
+    ctrlValue.year(normalizedMonthAndYear.year());
+    this.date.setValue(ctrlValue);
+    datepicker.close();
+  }
+
+  setMonthAndYearSince(normalizedMonthAndYear: Moment, datepicker: MatDatepicker<Moment>) {
+    const ctrlValue = this.dateSince.value ?? moment();
+
+    ctrlValue.day(normalizedMonthAndYear.day());
+    ctrlValue.month(normalizedMonthAndYear.month());
+    ctrlValue.year(normalizedMonthAndYear.year());
+    this.dateSince.setValue(ctrlValue);
+
+    console.log(this.dateSince.getRawValue()?.month());
+    console.log(normalizedMonthAndYear.format('YYYY-MM-DD') );
+
+    // let sum=null;
+    // if(this.dateSince.getRawValue()?.month()==1){
+    //   sum=moment(normalizedMonthAndYear).add(27,'d');
+    // }else{
+    //   sum=moment(normalizedMonthAndYear).add(29,'d');
+    // }
+    this.formGenerate.rangeSince=normalizedMonthAndYear.format('YYYY-MM-DD');
+
+    // console.log(sum);
+    // console.log(sum.format('YYYY-MM-DD'),"SUM" );
+
+    console.log(this.formGenerate.rangeSince );
+
+    datepicker.close();
+  }
+
+  setMonthAndYearUntil(normalizedMonthAndYear: Moment, datepicker: MatDatepicker<Moment>) {
+    const ctrlValue = this.dateUntil.value ?? moment();
+    ctrlValue.month(normalizedMonthAndYear.month());
+    ctrlValue.year(normalizedMonthAndYear.year());
+    this.dateUntil.setValue(ctrlValue);
+
+    let sum=null;
+    if(this.dateUntil.getRawValue()?.month()==1){
+      sum=moment(normalizedMonthAndYear).add(27,'d');
+    }else{
+      sum=moment(normalizedMonthAndYear).add(29,'d');
+    }
+
+    //this.formGenerate.rangeUntil=normalizedMonthAndYear.format('YYYY-MM-DD');
+
+    this.formGenerate.rangeUntil=sum.format('YYYY-MM-DD');
+
+    console.log(this.formGenerate.rangeUntil);
+    datepicker.close();
   }
 
   openDialog(): void {
@@ -492,7 +560,7 @@ export class Principal implements OnInit, DoCheck {
     //this.isLoaderShow=true;
     this.setLoaderShow();
     const {
-      nit
+      nit,rangeSince,rangeUntil
     } = this.formGenerate;
 
     const tipo_retencion:string=String(this.typeCertSelected);
@@ -503,7 +571,9 @@ export class Principal implements OnInit, DoCheck {
       nit,
       tipo_retencion,
       year_tribute,
-      idOrg)
+      idOrg,
+      rangeSince,
+      rangeUntil)
       .subscribe({
         next: data => {
 
@@ -576,6 +646,11 @@ export class Principal implements OnInit, DoCheck {
     ////console.log($event);
     this.anioSelected=$event;
     this.formGenerate.year_tribute=$event;
+  }
+
+  changeCityCert($event:any): void {
+    this.citySelected=$event;
+    this.formGenerate.city=$event;
   }
 
   decargar():void {
