@@ -45,7 +45,9 @@ export class CertificateService {
   setCertificate(nit:string,
                  tipo_retencion:string,
                  year_tribute:string,
-                 idOrganizacion:string): Observable<any> {
+                 idOrganizacion:string,
+                 rangeSince:string,
+                 rangeUntil:string): Observable<any> {
 
     const hopt = {
       //headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -59,6 +61,8 @@ export class CertificateService {
         tipo_retencion,
         year_tribute,
         idOrganizacion,
+        rangeSince,
+        rangeUntil
       },hopt,
     );
   }
