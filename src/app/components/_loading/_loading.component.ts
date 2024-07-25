@@ -4,6 +4,7 @@ import {MatButtonModule} from '@angular/material/button';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment.development';
+import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'Loading',
@@ -12,12 +13,17 @@ import { environment } from '../../../environments/environment.development';
 })
 export class LoadingComponent implements OnInit
 {
-
+  @Input() value : number = 100;
+  @Input() diameter: number = 100;
+  @Input() mode : ProgressSpinnerMode = 'indeterminate';
+  @Input() strokeWidth : number = 10;
+  @Input() overlay: boolean = false;
+  @Input() color: string = "primary";
   //@Input('title') title?: string;
 
-  color = 'primary';
-  mode = 'Indeterminate';
-  value = 50;
+  // color = 'primary';
+  // mode = 'Indeterminate';
+  // value = 50;
 
   public footerActive=false;
   currentIndex = -1;

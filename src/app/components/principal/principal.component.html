@@ -1,23 +1,33 @@
 <div class="Principal">
   <div class="principal-container">
+    <div class="menu" >
 
-    <div class="menu">
+      <!-- <img class="principal-logo" ngSrc="{{this.getAssetsENV()}}logoapex.png"  height="0.5rem" width="auto" alt="logo-apex"/> -->
 
-      <img class="principal-logo" src="{{this.getAssetsENV()}}logoapex.png" alt="logo" />
-
+      <img ngSrc="{{this.getAssetsENV()}}logoapex.png" class="principal-logo" height="100" width="210"  priority alt="logo-apex" />
+      <button  mat mat-button color="primary" (click)="activeHome()">
+      <mat-icon style="flex-direction: row;
+                       display: flex;
+                       justify-content: center;
+                       justify-items:center;
+                       margin-right: 1rem;
+                       font-size: 1.3rem;
+                       justify-self: center;
+                       flex-wrap: nowrap"
+                aria-hidden="false"
+                aria-label="Example home icon"
+                color="primary" fontIcon="home"></mat-icon>
+        Inicio
+      </button>
       <mat-divider vertical style="margin-left: 0.8rem; margin-right: 0.8rem;"></mat-divider>
-      <button mat-button color="#ffffff" (click)="activeHome()">Inicio</button>
+      <button mat-button color="primary" (click)="activeProfile()">Perfil</button>
       <mat-divider vertical style="margin-left: 0.8rem; margin-right: 0.8rem;"></mat-divider>
-      <button mat-button color="#fff" (click)="activeProfile()">Perfil</button>
+      <button mat-button color="primary" (click)="activeUploadFiles()">Cargar archivos</button>
       <mat-divider vertical style="margin-left: 0.8rem; margin-right: 0.8rem;"></mat-divider>
-      <button mat-button (click)="activeUploadFiles()">Cargar archivos</button>
+      <button mat-button color="primary" (click)="activeDownloadFiles()">Descarga de cetificados</button>
       <mat-divider vertical style="margin-left: 0.8rem; margin-right: 0.8rem;"></mat-divider>
-      <button mat-button (click)="activeDownloadFiles()">Descarga de cetificados</button>
-      <mat-divider vertical style="margin-left: 0.8rem; margin-right: 0.8rem;"></mat-divider>
-      <button mat-button (click)="exit()">Salir</button>
-
+      <button mat-button color="primary" (click)="exit()">Salir</button>
     </div>
-
     <div class="mat-typography titles">
       <h1 *ngIf="downloadFiles"> Descarga de Archivos </h1>
       <h1 *ngIf="uploadFiles"> Carga de Archivos </h1>
@@ -25,7 +35,9 @@
 
     @if(downloadFiles) {
 
-    <Loading *ngIf="this.isLoaderShow"></Loading>
+      @if(isLoaderShow){
+        <Loading class="center-spinner" ></Loading>
+      }
 
     <div class="principal-container-process">
       <div class="principal-container-process-left mat-elevation-z8">
@@ -44,7 +56,7 @@
                 <mat-label>Certificado</mat-label>
                 <mat-select #typeCertificate (valueChange)="changeTypeCert($event)">
                   @for (certificado of certificados; track certificado) {
-                  <mat-option [value]="certificado.id_type_certificate">{{certificado.name_type}}</mat-option>
+                  <mat-option [value]="certificado.indicator">{{certificado.name_type}}</mat-option>
                   }
                 </mat-select>
               </mat-form-field>
@@ -70,30 +82,19 @@
               <br>
 
               <!-- <mat-form-field>
-                  <mat-label>Favorite food</mat-label>
-                  <mat-select>
-                    @for (org of organizations; track org) {
-                      <mat-option [value]="org.id_organization">{{org.nit}}</mat-option>
-                    }
-                  </mat-select>
-                </mat-form-field>
-
-
-                <br> -->
-
-              <mat-form-field>
                 <mat-label>Ciudad</mat-label>
                 <mat-select #ciudadSelected (valueChange)="changeCityCert($event)">
                   @for (city of cities; track city) {
                   <mat-option [value]="city.viewValue">{{city.viewValue}}</mat-option>
                   }
                 </mat-select>
-              </mat-form-field>
+              </mat-form-field> -->
               <br>
 
 
               <!-- <div class="dates"> -->
-              <mat-divider></mat-divider>
+
+                <!-- <mat-divider></mat-divider> -->
 
               <mat-form-field>
                 <mat-label>Año</mat-label>
@@ -106,20 +107,19 @@
 
               <br>
 
-              <mat-form-field>
+              <!-- <mat-form-field>
                 <mat-label>Desde</mat-label>
                 <input matInput [matDatepicker]="dpSince" [formControl]="dateSince" placeholder="DD/MM/YYYY" />
-                <!-- <mat-hint>MM/YYYY</mat-hint> -->
                 <mat-datepicker-toggle matIconSuffix [for]="dpSince"></mat-datepicker-toggle>
                 <mat-datepicker #dpSince startView="multi-year" (monthSelected)="setMonthAndYearSince($event, dpSince)"
                   panelClass="example-month-picker">
                 </mat-datepicker>
-              </mat-form-field>
+              </mat-form-field> -->
 
-              <mat-divider vertical style="margin-left: 0.8rem; margin-right: 0.8rem;"></mat-divider>
+              <!-- <mat-divider vertical style="margin-left: 0.8rem; margin-right: 0.8rem;"></mat-divider> -->
 
 
-              <mat-form-field>
+              <!-- <mat-form-field>
                 <mat-label>Hasta:</mat-label>
                 <input matInput [matDatepicker]="dpUntil" [formControl]="dateUntil" placeholder="DD/MM/YYYY" />
                 <mat-hint>MM/YYYY</mat-hint>
@@ -127,7 +127,7 @@
                 <mat-datepicker #dpUntil startView="multi-year" (monthSelected)="setMonthAndYearUntil($event, dpUntil)"
                   panelClass="example-month-picker">
                 </mat-datepicker>
-              </mat-form-field>
+              </mat-form-field> -->
               <br>
               <br>
               <mat-divider></mat-divider>
@@ -175,14 +175,17 @@
             <mat-selection-list #certificateG
               (selectionChange)="selectedItemCert(certificateG.selectedOptions.selected)" [multiple]="false">
               <mat-list-option *ngFor="let certificateG of certificatesGenerated" [value]="certificateG">
-                <div class="mat-typography">
-                  <mat-icon aria-hidden="false" aria-label="Example home icon" color="primary" fontIcon="document">
+                <!-- <div class="mat-typography"> -->
+                  <!-- <mat-icon aria-hidden="false" aria-label="Example home icon" color="primary" fontIcon="document">
                     {{certificateG.nombre+" - "+certificateG?.url_assoc_file}}
-                  </mat-icon>
-                  <h3>
+                  </mat-icon> -->
+
+                  <!-- <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="home"></mat-icon> -->
+                  <h3 >
+                    <mat-icon  aria-hidden="false" aria-label="Example home icon" color="primary" fontIcon="picture_as_pdf"></mat-icon>
                     {{certificateG.nombre+" - "+certificateG?.url_assoc_file}}
                   </h3>
-                </div>
+                <!-- </div> -->
               </mat-list-option>
               <!-- @for (certificateG of certificatesGenerated; track certificateG) {
               <mat-list-option [value]="certificateG.id_certificados_generado">{{certificateG.nombre+" - "+certificateG?.url_assoc_file}}</mat-list-option>
@@ -206,7 +209,20 @@
             <mat-divider></mat-divider>
 
 
-            <button mat-button color="primary" (click)="decargar()">Descargar</button>
+            <button mat-button color="primary" (click)="decargar()">
+              <mat-icon style="flex-direction: row;
+              display: flex;
+              justify-content: center;
+              justify-items:center;
+              margin-right: 1rem;
+              font-size: 1.3rem;
+              justify-self: center;
+              flex-wrap: nowrap"
+       aria-hidden="false"
+       aria-label="Example home icon"
+       color="primary" fontIcon="download"></mat-icon>
+              Descargar
+            </button>
           </mat-card-actions>
 
           <mat-card-footer>
@@ -219,13 +235,16 @@
     </div>
     }
 
-    @if(uploadFiles) {
-
+    @if(uploadFiles===true&&validationRolUploadFile()===true) {
         <div class="UpLoadFile-container-process">
 
-          <div class="UpLoadFile-container-process-center">
+        <div class="UpLoadFile-container-process-center">
 
             <mat-card tabindex="0" class="mat-elevation-z8">
+
+              @if(isLoaderShow){
+                <Loading class="center-spinner"></Loading>
+              }
 
               <mat-card-header>
                 <mat-card-subtitle>Manejo de archivos</mat-card-subtitle>
@@ -235,10 +254,11 @@
               <mat-card-content>
                 <form name="form" (ngSubmit)="onSubmit()" #f="ngForm" enctype="multipart/form-data">
                   <mat-form-field>
-                    <ngx-mat-file-input [formControl]="fileControl" accept=".xlsx" name="fileUpload" id="fileUpload">
+                    <ngx-mat-file-input [formControl]="fileControl" accept=".xlsx" name="fileUpload" id="fileUpload" placeholder="Seleccione un archivo">
                       <mat-icon ngxMatFileInputIcon>folder</mat-icon>
                     </ngx-mat-file-input>
                   </mat-form-field>
+                  <br>
                   <mat-divider></mat-divider>
                   <div class="title">Selección de acrchivo(s):</div>
                   <div class="value">
@@ -253,14 +273,30 @@
             </mat-card>
           </div>
         </div>
+    }@else if (uploadFiles===true&&validationRolUploadFile()===false) {
+      <h1>
+        No esta autorizado para ingresar a esta sección
+      </h1>
     }
+
+
+
     @if(home){
-    <home  />
+
+      @if(isLoaderShow){
+        <Loading class="center-spinner" [overlay]="false"></Loading>
+      }
+      <home  />
     }
     @if (profile) {
-
-    <profile [names]="this.namesUser" [lastNames]="this.lastName" />
+      @if(isLoaderShow){
+        <Loading class="center-spinner" ></Loading>
+      }
+    <profile [names]="this.namesUser" [lastNames]="this.lastName"  [orgAsociate]="this.orgAsociate" [idUser]="this.idUser" [nit]="this.generalNit"/>
     }
+
+
+
   </div>
 </div>
 <footer></footer>

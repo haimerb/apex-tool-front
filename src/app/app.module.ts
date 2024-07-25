@@ -8,7 +8,6 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { AddTutorialComponent } from './components/add-tutorial/add-tutorial.component';
 import { Landing } from './components/landing/landing.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { MatButtonModule } from '@angular/material/button';
@@ -34,8 +33,9 @@ import { ProfileComponent } from './components/profile/profile.component';
 import {MatDialogModule} from '@angular/material/dialog';
 
 import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
-import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { MAT_DATE_LOCALE, MatRippleModule } from '@angular/material/core';
 import { MatDatepicker, MatDatepickerModule } from '@angular/material/datepicker';
+import { NgOptimizedImage } from '@angular/common';
 
 export const MY_FORMATS = {
   parse: {
@@ -52,7 +52,6 @@ export const MY_FORMATS = {
 @NgModule({
   declarations: [
     AppComponent,
-    AddTutorialComponent,
     Landing,
     LoginComponent,
     Principal,
@@ -84,7 +83,9 @@ export const MY_FORMATS = {
     MatSnackBarModule,
     MatDialogModule,
     MatDatepicker,
-    MatDatepickerModule
+    MatDatepickerModule,
+    MatRippleModule,
+    NgOptimizedImage
   ],
   exports: [MatButtonModule,FormsModule],
   providers: [

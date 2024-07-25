@@ -1,6 +1,6 @@
-<div class="Login">
-  <div class="login-container">
-    <div class="login-header">
+<div  class="Login" >
+  <div class="login-container" >
+    <div class="login-header" >
       <img src="{{this.getAssetsENV()}}logoapex.png" alt="logo" class="login-logo" />
       <div class="mat-typography">
         <h1>Inicio de sesión</h1>
@@ -21,21 +21,7 @@
         </mat-progress-spinner>
           <div class="form-group">
 
-
-
-            <!-- <input type="text"
-                             name="email"
-                             class="form-control form-control-sm"
-                             id="email"
-                             placeholder="Ingrese email o nit"
-                             [(ngModel)]="form.email"
-                             required
-                             #email="ngModel"
-                             [ngClass]="{ 'is-invalid': f.submitted && email.errors }"
-                          /> -->
-            <!-- <small id="emailHelp" class="form-text text-muted">Nunca compartiremos tu correo electrónico con nadie más.</small> -->
-
-            <mat-form-field >
+            <mat-form-field matRipple [matRippleCentered]="isCentrematRipple">
               <mat-label>usuario</mat-label>
               <input
               type="text"
@@ -48,7 +34,7 @@
             </mat-form-field>
 
 
-            <mat-form-field >
+            <mat-form-field matRipple [matRippleCentered]="isCentrematRipple">
               <mat-label>Password</mat-label>
               <input matInput required type="password" name="password" [(ngModel)]="form.password"
                 class="form-control form-control-sm" id="password" placeholder="Ingrese password" minlength="6"

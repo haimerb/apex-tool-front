@@ -27,21 +27,6 @@ export class CertificateService {
       environment.apiUrl+'certification.php/allTypesCertificates',
     );
   }
-
-
-  // setBaseCertificate(nit:string,tipo_retencion:string,year_tribute:string,idOrganizacion:String): Observable<any> {
-  //   return this.http.post(
-  //     environment.apiUrl+'files.php/files/generateBase',
-  //     {
-  //       nit,
-  //       tipo_retencion,
-  //       year_tribute,
-  //       idOrganizacion
-  //     },
-  //     httpOptions
-  //   );
-  // }
-
   setCertificate(nit:string,
                  tipo_retencion:string,
                  year_tribute:string,
@@ -50,13 +35,12 @@ export class CertificateService {
                  rangeUntil:string): Observable<any> {
 
     const hopt = {
-      //headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
       headers: new HttpHeaders({ 'Content-Type': 'text/plain' })
     };
     hopt.headers.append("Accept-Encoding","gzip, deflate, br");
     hopt.headers.append("Accept","application/json");
     return this.http.post(
-      environment.apiUrl+'api.php/files/base',
+      environment.apiUrl+'api.php/certificate/base',
       {nit,
         tipo_retencion,
         year_tribute,
@@ -67,5 +51,19 @@ export class CertificateService {
     );
   }
 
+  getPreCertification(nit:string,tipo_retencion:string,
+                      year_tribute:string,idOrganizacion:string): Observable<any> {
+
+    const opt = {
+      params:new HttpParams().set("nit",nit)
+                              .set("tipo_retencion",tipo_retencion)
+                              .set("year_tribute",year_tribute)
+                              .set("idOrganizacion",idOrganizacion)
+    };
+
+    return this.http.get(
+      environment.apiUrl+'api.php/certificate/getInfoPreBase',opt
+    );
+  }
 
 }

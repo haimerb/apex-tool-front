@@ -14,6 +14,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+  isLoaderShow?:boolean;
+  isCentrematRipple=true;
   statePrincipal="";
   idLoader=false;
   emailFormControl = new FormControl('', [Validators.required]);
@@ -32,7 +34,9 @@ export class LoginComponent implements OnInit {
     private storageService: StorageService,
     private router: Router,
     private appcomponent: AppComponent
-  ) { }
+  ) {
+    this.isLoggedIn = false;
+  }
 
   ngOnInit(): void {
 
@@ -47,6 +51,7 @@ export class LoginComponent implements OnInit {
   }
   onSubmit(): void {
     this.idLoader=true;
+    this.setLoaderShow();
     const {
       email,
       password
@@ -83,6 +88,18 @@ export class LoginComponent implements OnInit {
       }
     });
 
+
+
+  }
+
+
+  setLoaderShow():void{
+    this.isLoaderShow=true;
+    this.storageService.setStateShowLoader(true);
+  }
+  setLoaderHide():void{
+      this.isLoaderShow=false;
+      this.storageService.setStateShowLoader(false);
   }
 
   reloadPage(): void {
