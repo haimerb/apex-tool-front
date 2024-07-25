@@ -1,6 +1,3 @@
-:host ::ng-deep .track circle{
-  stroke-opacity: 0.3 !important;
-}
 .Pricipal{
   width: 100%;
   opacity: 0.85;
@@ -111,29 +108,9 @@ mat-card-footer{
 
 .center-spinner{
   position: absolute;
+  text-align: center;
   top: 50%;
   left: 50%;
-  -moz-transform: translateX(-50%) translateY(-50%);
-  -webkit-transform: translateX(-50%) translateY(-50%);
-  transform: translateX(-50%) translateY(-50%);
-  margin: 0 auto;
+  transform: translate(-50%, -50%);
 }
 
-.center {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  -moz-transform: translateX(-50%) translateY(-50%);
-  -webkit-transform: translateX(-50%) translateY(-50%);
-  transform: translateX(-50%) translateY(-50%);
-}
-
-.overlay{
-height:100vh;
-width:100%;
-background-color:rgba(0, 0, 0, 0.286);
-z-index:    -1;
-top:        0;
-left:       0;
-position:   absolute;
-}

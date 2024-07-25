@@ -18,6 +18,10 @@ export interface RowItem {
   razonSocial:string;
 }
 
+export interface RowItems {
+  rows:RowItem[]
+}
+
 export interface DialogData {
   rows:RowItem[];
 }
@@ -45,7 +49,9 @@ export class DialogComponent implements OnInit
   constructor(
     public dialogRef: MatDialogRef<DialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
-  ) {}
+  ) {
+
+  }
 
   onNoClick(): void {
     this.dialogRef.close();
@@ -54,7 +60,11 @@ export class DialogComponent implements OnInit
 
   isLoggedIn = false;
   ngOnInit(): void {
-
+    //this.rows=this.data.rows;
+    console.log(this.data.rows,"ng");
+    // this.data.rows.forEach( (value,index)=>{
+    //   console.log(this.data.rows[index],"ng");
+    // } );
   }
 
 }

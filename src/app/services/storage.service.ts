@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 const USER_KEY = 'auth-user';
 const STATE_KEY = 'state';
 const STATE_SHOW_KEY='show-loader';
+const ROLS_KEY='rols';
 
 @Injectable({
   providedIn: 'root'
@@ -64,5 +65,8 @@ public setStateShowLoader(state :any):void{
   window.sessionStorage.setItem(STATE_SHOW_KEY, state);
 }
 
+public setRoles(state :any):void{
+  window.sessionStorage.setItem(ROLS_KEY, state);
+}
 
 }

@@ -1,6 +1,7 @@
 {
   "name": "certificapp",
   "version": "1.0.0",
+  "Author": "Haymer Y. Barbetti",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

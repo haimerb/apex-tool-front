@@ -1,7 +1,9 @@
+import { UserService } from './../../services/user.service';
 import { StorageService } from '../../services/storage.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment.development';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'profile',
@@ -10,13 +12,24 @@ import { environment } from '../../../environments/environment.development';
 })
 export class ProfileComponent implements OnInit
 {
+  @Input() idUser?:string;
   @Input() names?: string;
   @Input() lastNames?: string;
   @Input() title?: string;
+  @Input() orgAsociate?: string;
+  @Input() nit?: string;
   public footerActive=false;
   currentIndex = -1;
+  form: any = {
+    namesUser:null,
+    lastNameUser:null,
+    passwordUser:null,
+    confirmPasswordUser:null
+  };
   //title = '';
   constructor(
+    private _snackBar: MatSnackBar,
+    private userService: UserService,
     private storageService:StorageService,
     private router: Router) {}
   isLoggedIn = false;
@@ -45,6 +58,87 @@ export class ProfileComponent implements OnInit
       navigationDetails.push($myParam);
     }
     this.router.navigate(['/login']);
+  }
+
+  onSubmit(): void {
+    const
+    {namesUser,
+      lastNameUser,
+      passwordUser,
+      confirmPasswordUser}=this.form;
+    if(passwordUser===confirmPasswordUser){
+      this.userService.updateUser(
+        Number(this.idUser),
+        namesUser,
+        lastNameUser,
+        passwordUser,
+        ).subscribe({
+          next: data => {
+            // this.certificados=data;
+            //this.isLoaderShow=false;
+            //console.log(data);
+            if(data?.status ===200){
+              this._snackBar.open("Usuario actualizado con exito!","Cerrar");
+            }
+
+          },
+          error: err => {
+            // this.errorMessage = err?.error?.message;
+            // this.isLoginFailed = true;
+            //console.log(err);
+
+
+            console.error('There was an error!', err);
+            this._snackBar.open(err?.message+" \n "+JSON.stringify(err?.error),"Cerrar");
+            //console.log(err.message);
+            //*-----this.isLoaderShow=false;
+            return;
+          },
+          complete: () => {
+            //this.isLoaderShow=false;
+            ////console.log("Completado");
+            //this.isLoaderShow=false;
+            return;
+          }
+        });
+    } else{
+      this._snackBar.open("Error: Las contraseñas no coinciden!","Cerrar");
+    }
+    // this.userService.updateUser(
+    //   Number(this.idUser),
+    //   namesUser,
+    //   lastNameUser,
+    //   passwordUser,
+    //   ).subscribe({
+    //     next: data => {
+    //       // this.certificados=data;
+    //       //this.isLoaderShow=false;
+    //       //console.log(data);
+    //       if(data?.status ===200){
+    //         this._snackBar.open("Usuario actualizado con exito!","Cerrar");
+    //       }
+
+    //     },
+    //     error: err => {
+    //       // this.errorMessage = err?.error?.message;
+    //       // this.isLoginFailed = true;
+    //       //console.log(err);
+
+
+    //       console.error('There was an error!', err);
+    //       this._snackBar.open(err?.message+" \n "+JSON.stringify(err?.error),"Cerrar");
+    //       //console.log(err.message);
+    //       //*-----this.isLoaderShow=false;
+    //       return;
+    //     },
+    //     complete: () => {
+    //       //this.isLoaderShow=false;
+    //       ////console.log("Completado");
+    //       //this.isLoaderShow=false;
+    //       return;
+    //     }
+    //   });
+
   }
   // retrieveTutorials(): void {
   //   this.tutorialService.getAll().subscribe({

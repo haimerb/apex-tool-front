@@ -1,12 +1,18 @@
 <h2 mat-dialog-title>Elementos Insertados</h2>
-<mat-dialog-content>This dialog showcases the title, close, content and actions elements.
+<mat-dialog-content> Se insertaron {{data.rows.length}} registros exitosamente.
 
   <mat-list role="list">
-  @for (row of data.rows; track row) {
+
+
+  @for (item of data.rows; track $index ) {
     <!-- //<mat-option [value]="certificado.id_type_certificate">{{certificado.name_type}}</mat-option> -->
+
     <mat-list-item role="listitem">
-      ID {{row.id_certificate_data}} | {{row.nit}}
+      <div class="mat-typography">
+      Concepto: {{item.nombreConcepto}} | Nit:{{item.nit}} | Razón Social: {{item.razonSocial}}
+      </div>
     </mat-list-item>
+
   }
 
 </mat-list>

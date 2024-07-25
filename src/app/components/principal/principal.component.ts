@@ -1,3 +1,4 @@
+import { UserService } from './../../services/user.service';
 import { CertificateService } from './../../services/certificate.service';
 import { OrganizationService } from './../../services/organization.service';
 import {
@@ -5,7 +6,8 @@ import {
   OnInit,
   DoCheck,
   ChangeDetectionStrategy,
-  ViewEncapsulation} from '@angular/core';
+  ViewEncapsulation,
+  } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { StorageService } from '../../services/storage.service';
@@ -14,16 +16,20 @@ import { MaxSizeValidator } from '@angular-material-components/file-input';
 import { MatListOption } from '@angular/material/list';
 import { CertificateGenerateItem } from '../../models/certificateGenerate.model';
 import { FIleService } from '../../services/file.service';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   MatDialog
 } from '@angular/material/dialog';
-import { DialogComponent } from '../_dialog/_dialog.component';
+import { DialogComponent, RowItems } from '../_dialog/_dialog.component';
 import * as _moment from 'moment';
 import {default as _rollupMoment, Moment} from 'moment';
 import 'moment/locale/es';
 import { MatDatepicker } from '@angular/material/datepicker';
+import { RowItemSave } from '../../models/tutorial.model copy';
+import { DialogCertComponent, RowItemsPreCert } from '../_dialog-cert/_dialog-cert.component';
+import { NgOptimizedImage } from '@angular/common';
+
 export interface RowItem {
   code:number;
   id_certificate_data:string;
@@ -34,6 +40,7 @@ export interface RowItem {
 export interface DialogData {
   rows:RowItem[];
 }
+
 interface Anio {
   value: string;
   viewValue: string;
@@ -46,6 +53,7 @@ interface Centificado {
   id_type_certificate: string;
   name_type: string;
   description:string;
+  indicator:string;
 }
 interface Organization {
   id_organization: string;
@@ -63,19 +71,37 @@ interface CertificatesGenerated {
   dv:string;
   url_assoc_file:string;
 }
+
+export interface RowItemPreCert {
+  cuantos:number;
+  range_ini:string;
+  range_end:string;
+  city:string;
+}
+
+interface Rol{
+  id_rol_user:number;
+  id_user:number;
+  id_rol:number;
+  name_rol:string;
+}
+
 const moment = _rollupMoment || _moment;
 @Component({
   selector: 'principal',
   templateUrl: './principal.component.html',
-  styleUrls: ['./principal.component.css'],
+  styleUrls: ['./principal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class Principal implements OnInit, DoCheck {
+export class Principal implements OnInit, DoCheck   {
   date = new FormControl(moment());
   dateSince = new FormControl(moment());
   dateUntil = new FormControl(moment());
-  dataRows?:RowItem[];
+
+  //dataRows?:RowItems;
+  dataRows?:RowItems;
+  dataRowsPreCert?:RowItemsPreCert;
   rows?:RowItem[];
   isLoaderShow:boolean;
   oldIsLoaderShow=false;
@@ -120,6 +146,8 @@ export class Principal implements OnInit, DoCheck {
   idOrganizacion:string="0";
   namesUser:string="";
   lastName:string="";
+  orgAsociate:string="";
+  idUser:string="";
    anios: Anio[] = [
     {value: '0', viewValue: '2020'},
     {value: '1', viewValue: '2021'},
@@ -135,15 +163,18 @@ export class Principal implements OnInit, DoCheck {
     {value: '4', viewValue: 'Cartagena'},
     {value: '5', viewValue: 'Tolima'}
   ];
+  roles?:Rol[];
   certificados?: Centificado[];
   organizations?: Organization[];
   certificatesGenerated?: CertificatesGenerated[];
+  oldCertificatesGenerated?: CertificatesGenerated[];
   currentIndex = -1;
   typeCertSelected=0;
   anioSelected=0;
   citySelected=0;
 
   constructor(
+    public userService: UserService,
     public dialog: MatDialog,
     private snackBar: MatSnackBar,
     private fIleService : FIleService,
@@ -157,11 +188,6 @@ export class Principal implements OnInit, DoCheck {
     this.isLoaderShow=false;
   }
 
-  transformMonth(numMont:number):string{
-
-    return "";
-  }
-
   setMonthAndYear(normalizedMonthAndYear: Moment, datepicker: MatDatepicker<Moment>) {
     const ctrlValue = this.date.value ?? moment();
     ctrlValue.month(normalizedMonthAndYear.month());
@@ -169,7 +195,6 @@ export class Principal implements OnInit, DoCheck {
     this.date.setValue(ctrlValue);
     datepicker.close();
   }
-
   setMonthAndYearSince(normalizedMonthAndYear: Moment, datepicker: MatDatepicker<Moment>) {
     const ctrlValue = this.dateSince.value ?? moment();
 
@@ -196,7 +221,6 @@ export class Principal implements OnInit, DoCheck {
 
     datepicker.close();
   }
-
   setMonthAndYearUntil(normalizedMonthAndYear: Moment, datepicker: MatDatepicker<Moment>) {
     const ctrlValue = this.dateUntil.value ?? moment();
     ctrlValue.month(normalizedMonthAndYear.month());
@@ -217,30 +241,54 @@ export class Principal implements OnInit, DoCheck {
     console.log(this.formGenerate.rangeUntil);
     datepicker.close();
   }
-
   openDialog(): void {
     const dialogRef = this.dialog.open(DialogComponent, {
-      data: {rows: this.dataRows as RowItem[]},
+      data:{rows:this.dataRows},
     });
-
     dialogRef.afterClosed().subscribe(result => {
-      ////console.log('The dialog was closed');
       this.rows = result;
     });
   }
+  openDialogCert(): void {
+    const dialogRef = this.dialog.open(DialogCertComponent, {
+      data:{rows:this.dataRowsPreCert},
+    });
 
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result?.data);
+      this.certificatesGenerated=[];
+      this.certificatesGenerated=result?.data as CertificatesGenerated[];
+    });
 
+  }
   setLoaderShow():void{
-    ////console.log("setLoaderShow: "+this.isLoaderShow+" from ");
     this.isLoaderShow=true;
     this.storageService.setStateShowLoader(true);
-    ////console.log("setLoaderShow: "+this.isLoaderShow+" to ");
   }
   setLoaderHide():void{
       this.isLoaderShow=false;
       this.storageService.setStateShowLoader(false);
   }
+  validationRolUploadFile(){
+    let val=false;
+    if(this.roles?.length){
+      this.roles?.forEach(element=>{
 
+        console.log(element.name_rol);
+
+        if(element.name_rol==='ADMIN'){
+          console.log(element.name_rol,"Es ADMIN");
+          val=true;
+
+        }
+
+      });
+      console.log(val);
+      return val;
+    }else{
+      return false;
+    }
+  }
   ngDoCheck(): void {
 
     if (this.downloadFiles!== this.oldDownloadFiles) {
@@ -251,6 +299,8 @@ export class Principal implements OnInit, DoCheck {
       this.generalNit=this.storageService.getUser()?.nit;
       this.state=this.storageService.statePrincipal();
       this.stateShowLoader=this.storageService.stateShowLoader();
+      this.roles=this.storageService.getUser()?.rols;
+      this.idOrganizacion=this.storageService.getUser()?.id_organization;
 
       if(this.state!=""){
 
@@ -307,6 +357,7 @@ export class Principal implements OnInit, DoCheck {
             }
           });
 
+
         }
         if(this.state=="uploadFiles"){
           this.downloadFiles=false;
@@ -345,6 +396,10 @@ export class Principal implements OnInit, DoCheck {
       }
 
     }
+    // else{
+    //   this.stateShowLoader=this.storageService.stateShowLoader();
+    // }
+
     if (this.changeDetected) {
         this.noChangeCount = 0;
     } else {
@@ -366,8 +421,19 @@ export class Principal implements OnInit, DoCheck {
   ngOnInit(): void {
 
     //this.isLoaderShow=false;
+    this.stateShowLoader=this.storageService.stateShowLoader();
+
+    if(this.stateShowLoader==="true"){
+      this.setLoaderShow();
+    }else if(this.stateShowLoader==="false"){
+      this.setLoaderHide();
+    }else{
+      this.setLoaderHide();
+    }
+    this.setLoaderShow();
 
     this.fileControl.valueChanges.subscribe((files: any) => {
+      this.setLoaderShow();
       this.files=[];
       //////console.log(files,"FILESAAA");
       if (!Array.isArray(files)) {
@@ -375,21 +441,19 @@ export class Principal implements OnInit, DoCheck {
         this.formData.append('fileUpload',this.files[0],this.files[0]?.name);
         //this.form.uploadFile=this.files[0];
       } else {
-        //////console.log(files,"FILESAAA");
         this.files = files;
-        //this.form.uploadFile=this.files[0];
         this.formData.append('fileUpload',this.files[0],this.files[0]?.name);
       }
-      //////console.log(this.files,"FILES-SSSS");
+      this.setLoaderHide();
     });
-
-    //this.isLoaderShow=true;
-    ////console.log(this.storageService.getUser(),"user");
 
     this.generalNit=this.storageService.getUser()?.nit;
     this.idOrganizacion=this.storageService.getUser()?.id_organization;
     this.namesUser=this.storageService.getUser()?.names;
     this.lastName=this.storageService.getUser()?.lastname;
+    this.orgAsociate=this.storageService.getUser()?.ornganization_name;
+    this.idUser=this.storageService.getUser()?.idUser;
+    this.roles=this.storageService.getUser()?.rols;
 
     //this.appComponent.footerActive=true;
     this.state=this.storageService.statePrincipal();
@@ -401,27 +465,22 @@ export class Principal implements OnInit, DoCheck {
         this.uploadFiles=false;
         this.profile=false;
         this.home=false;
-
+        this.setLoaderShow();
         this.CetificateService.getTypesCertificates().subscribe({
           next: data => {
             this.certificados=data;
             //this.isLoaderShow=false;
             ////console.log(data);
+            this.setLoaderHide();
           },
           error: err => {
-            // this.errorMessage = err?.error?.message;
-            // this.isLoginFailed = true;
-            ////console.log(err?.error?.message);
-            //*-----this.isLoaderShow=false;
-            return;
+            this.setLoaderHide();
           },
           complete: () => {
-            //this.isLoaderShow=false;
-            ////console.log("Completado");
-            //this.isLoaderShow=false;
-            return;
+            this.setLoaderHide();
           }
         });
+        this.setLoaderShow();
         this.OrganizationService.getAllOrganizations(this.generalNit||"").subscribe({
           next: data => {
             this.organizations=data;
@@ -441,6 +500,7 @@ export class Principal implements OnInit, DoCheck {
           }
         });
         //*-----this.isLoaderShow=false;
+        this.setLoaderShow();
         this.CetificateService.allCertificatesByOrg(this.idOrganizacion).subscribe({
           next: data => {
             this.certificatesGenerated=data;
@@ -464,6 +524,7 @@ export class Principal implements OnInit, DoCheck {
         this.profile=false;
         this.uploadFiles=true;
         this.home=false;
+
       }
       if(this.state=="home"){
         this.downloadFiles=false;
@@ -489,6 +550,7 @@ export class Principal implements OnInit, DoCheck {
       this.router.navigate(['/landing']);
     }
     //this.isLoaderShow=false;
+    this.setLoaderHide();
   }
   async onSubmit(): Promise<void> {
     this.setLoaderShow();
@@ -503,13 +565,37 @@ export class Principal implements OnInit, DoCheck {
           ////console.log(data,"upLoadFIle-DATAA");
           const tmpDataRows=data?.body?.rows_proocessed;
 
-          tmpDataRows.forEach((value:any) => {
-            //////console.log(JSON.stringify(value));
-            let item=value;
-            this.dataRows?.push(
-             value as RowItem
-            );
-          });
+          // data?.body?.rows_proocessed.forEach((value:RowItem,index:number) => {
+          //   //////console.log(JSON.stringify(value));
+          //   console.log(data?.body?.rows_proocessed[index]);
+          //   let item=value;
+          //   this.dataRows?.push(
+          //     data?.body?.rows_proocessed[index][index]
+          //   );
+          // });
+          console.log(JSON.stringify(data?.body?.rows_proocessed));
+          for(let i=0; i<data?.body?.rows_proocessed.length; i++){
+            //console.log(data?.body?.rows_proocessed [i]);
+            let item=new RowItemSave();
+            item=data?.body?.rows_proocessed[i];
+            console.log(JSON.stringify(item.code));
+          }
+          this.dataRows=data?.body?.rows_proocessed;
+
+          // data?.body?.rows_proocessed.forEach( (element:RowItem,index:number) => {
+          //   this.dataRows?.push({
+          //     code:data?.body?.rows_proocessed[index].code,
+          //     nit:data?.body?.rows_proocessed[index].nit,
+          //     id_certificate_data:data?.body?.rows_proocessed[index].id_certificate_data,
+          //     nombreConcepto:data?.body?.rows_proocessed[index].nombreConcepto,
+          //     razonSocial:data?.body?.rows_proocessed[index].razonSocial
+          //   } as RowItem
+          // );
+          // });
+
+          //this.rows=data?.body?.rows_proocessed as RowItem[];
+
+          console.log(JSON.stringify(this.dataRows),"IN onSubmit");
           ////console.log(JSON.stringify(this.dataRows),"dataRows");
 
 
@@ -555,9 +641,7 @@ export class Principal implements OnInit, DoCheck {
   // });
 
   }
-
   onSubmitGenerate(): void {
-    //this.isLoaderShow=true;
     this.setLoaderShow();
     const {
       nit,rangeSince,rangeUntil
@@ -567,63 +651,88 @@ export class Principal implements OnInit, DoCheck {
     const year_tribute =String(this.anioSelected);
     const idOrg=this.idOrganizacion;
 
-    this.CetificateService.setCertificate(
-      nit,
-      tipo_retencion,
-      year_tribute,
-      idOrg,
-      rangeSince,
-      rangeUntil)
-      .subscribe({
-        next: data => {
+    this.CetificateService.getPreCertification( nit,tipo_retencion,year_tribute,idOrg).subscribe({
+      next: data => {
 
-
-          if(data?.code!=200){
+        if(data?.status!=200){
             ////console.log("Error: "+data?.message);
             this.setLoaderHide();
             this.snackBar.open(data?.message,"Cerrar");
             //this.loader=false;
           }else{
             ////console.log(data,"DATA");
+            this.dataRowsPreCert=data?.result as RowItemsPreCert;
+            this.openDialogCert();
             //this.setLoaderHide();
-
-            this.snackBar.open(data?.message,"Cerrar").onAction().subscribe(() => {
-              this.CetificateService.allCertificatesByOrg("1").subscribe({
-                next: data => {
-                  this.certificatesGenerated=data;
-                  //////console.log(this.certificatesGenerated);
-                  //////console.log(data);
-                },
-                error: err => {
-                  // this.errorMessage = err?.error?.message;
-                  // this.isLoginFailed = true;
-                  ////console.log(err?.error?.message);
-                  this.setLoaderHide();
-                },complete: () => {
-                  this.setLoaderHide();
-                  this.isLoaderShow=false;
-                  ////console.log("Completado");
-                  this.isLoaderShow=false;
-                }
-              });
-            });
           }
-
         },
         error: err => {
-          ////console.log(err?.error?.message);
           this.snackBar.open(err?.error?.message,"Cerrar");
-          //this.isLoaderShow=false;
         },
         complete: () => {
-          ////console.log("Completado");
           this.setLoaderHide();
-
-          //this.isLoaderShow=false;
         }
-      });
-      //this.isLoaderShow=false;
-      //this.setLoaderHide();
+    });
+
+    // this.CetificateService.setCertificate(
+    //   nit,
+    //   tipo_retencion,
+    //   year_tribute,
+    //   idOrg,
+    //   rangeSince,
+    //   rangeUntil)
+    //   .subscribe({
+    //     next: data => {
+
+    //     if(data?.code!=200){
+    //         ////console.log("Error: "+data?.message);
+    //         this.setLoaderHide();
+    //         this.snackBar.open(data?.message,"Cerrar");
+    //         //this.loader=false;
+    //       }else{
+    //         ////console.log(data,"DATA");
+    //         //this.setLoaderHide();
+
+    //         this.snackBar.open(data?.message,"Cerrar").onAction().subscribe(() => {
+    //           this.CetificateService.allCertificatesByOrg("1").subscribe({
+    //             next: data => {
+    //               this.certificatesGenerated=data;
+    //               //////console.log(this.certificatesGenerated);
+    //               //////console.log(data);
+    //             },
+    //             error: err => {
+    //               // this.errorMessage = err?.error?.message;
+    //               // this.isLoginFailed = true;
+    //               ////console.log(err?.error?.message);
+    //               this.setLoaderHide();
+    //             },complete: () => {
+    //               this.setLoaderHide();
+    //               this.isLoaderShow=false;
+    //               ////console.log("Completado");
+    //               this.isLoaderShow=false;
+    //             }
+    //           });
+    //         });
+    //       }
+
+    //     },
+    //     error: err => {
+    //       ////console.log(err?.error?.message);
+    //       this.snackBar.open(err?.error?.message,"Cerrar");
+    //       //this.isLoaderShow=false;
+    //     },
+    //     complete: () => {
+    //       ////console.log("Completado");
+    //       this.setLoaderHide();
+
+    //       //this.isLoaderShow=false;
+    //     }
+    //   });
+
+
+
+
+      this.setLoaderHide();
   }
 
   selectedItemCert(select: MatListOption[]): void {
@@ -631,23 +740,14 @@ export class Principal implements OnInit, DoCheck {
     ////console.log(JSON.stringify(this.certificateSelected));
     //////console.log(this.certificateSelected[0]);
   }
-
-  // selectedItemCertSelect(): CertificatesGenerated {
-  //   return null;
-  //   //return new CertificateGenerateItem(this.certificateSelected[0]);
-  // }
   changeTypeCert($event:any): void {
-    ////console.log($event);
     this.typeCertSelected=$event;
     this.formGenerate.tipo_retencion=$event
   }
-
   changeAnioCert($event:any): void {
-    ////console.log($event);
     this.anioSelected=$event;
     this.formGenerate.year_tribute=$event;
   }
-
   changeCityCert($event:any): void {
     this.citySelected=$event;
     this.formGenerate.city=$event;

@@ -1,0 +1,39 @@
+<h2 mat-dialog-title>Información para la generación de certificados</h2>
+<mat-dialog-content style="width: 100%; display: flex; flex-direction: column;  flex-wrap: nowrap;direction:column;  align-content: center;
+align-items: center;justify-items: center;">
+
+  Se encontraron {{data.rows.length}} elementos para la generación de certificados.
+  <mat-divider style="width: -webkit-fill-available;"></mat-divider>
+  <mat-selection-list #certificateG
+  (selectionChange)="selectedItemCert(certificateG.selectedOptions.selected)" [multiple]="false" style="width: 100%;">
+
+  @for (item of data.rows; track $index ) {
+    <mat-list-option  [value]="item" color="primary">
+      <div class="mat-typography">
+        <h3 style="display: flex; justify-content: center; margin-right: 1rem;" >
+          {{"Acciones tributarias: "+item.cuantos+"  Desde "+item?.range_ini +" hasta "+item?.range_end}}
+        </h3>
+      </div>
+    </mat-list-option>
+  }
+
+</mat-selection-list>
+
+<mat-divider style="width: -webkit-fill-available;"></mat-divider>
+  <button mat-button color="primary"  (click)="generateCertificateBase()" >Generar</button>
+
+
+@if(showResultDialog){
+  <mat-divider style="width: -webkit-fill-available;"></mat-divider>
+  <div class="mat-typography">
+    <h3 color="primary">
+      Se generó el certificado {{ nowCertificacion  }}
+  </h3>
+  </div>
+}
+
+</mat-dialog-content>
+<mat-divider style="width: -webkit-fill-available;"></mat-divider>
+<mat-dialog-actions>
+  <button mat-button  color="accent" mat-dialog-close (click)="onClose()">Cerrar</button>
+</mat-dialog-actions>

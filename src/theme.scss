@@ -1,49 +1,66 @@
-@use '@angular/material' as mat;
-@use '@angular/material-experimental' as matx;
-
-$m3-dark-theme: matx.define-theme(
-  (
-    color: (
-      theme-type: dark,
-      primary: matx.$m3-indigo-palette,
-      tertiary: matx.$m3-blue-palette,
-    ),
-  )
-);
-
-$m3-light-theme: matx.define-theme(
-  (
-    color: (
-      primary: matx.$m3-indigo-palette,
-      tertiary: matx.$m3-blue-palette,
-    ),
-  )
-);
-@include mat.core();
-@include matx.color-variants-back-compat($m3-light-theme);
-
-.dark-theme {
-  @include mat.all-component-themes($m3-dark-theme);
-}
-
-.light-theme {
-  @include mat.all-component-themes($m3-light-theme);
-}
-:root {
-  @include mat.all-component-themes($m3-light-theme);
-}
-
+// /* You can add global styles to this file, and also import other style files */
 // @use '@angular/material' as mat;
 // @use '@angular/material-experimental' as matx;
 
-// $theme: matx.define-theme((
-//   color: (
-//     theme-type: light,
-//     primary: matx.$m3-azure-palette,
-//     tertiary: matx.$m3-blue-palette,
-//   )
-// ));
-
-// :root {
-//   @include mat.all-component-themes($theme);
+// :root{
+//   --md-sys-color-primary: #006A6A;
+//   --md-sys-color-on-primary: #FFFFFF;
+//   --md-sys-color-primary-container: #6FF7F6;
+//   --md-sys-color-on-primary-container: #002020;
 // }
+
+// :Pricipal{
+//   --md-sys-color-primary: #006A6A;
+//   --md-sys-color-on-primary: #FFFFFF;
+//   --md-sys-color-primary-container: #6FF7F6;
+//   --md-sys-color-on-primary-container: #002020;
+// }
+
+// .primary {
+//   background: var(--md-sys-color-primary);
+//   color: var(--md-sys-color-on-primary);
+// }
+
+
+
+// @mixin my-comp-theme($theme) {
+//   .my-comp {
+//     font: mat.get-theme-typography($theme, body-large, font);
+//     letter-spacing: mat.get-theme-typography($theme, body-large, letter-spacing);
+//     background: mat.get-theme-color($theme, surface);
+//     @if mat.get-theme-type($theme) == dark {
+//       color: mat.get-theme-color($theme, primary, 20);
+//     } @else {
+//       color: mat.get-theme-color($theme, primary, 80);
+//     }
+//     padding: 48px + (2px * mat.get-theme-density($theme));
+//   }
+// }
+@use "@angular/material" as mat;
+
+@include mat.core();
+
+$my-app-primary: mat.define-palette(mat.$indigo-palette);
+$my-app-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+$my-app-warn: mat.define-palette(mat.$red-palette);
+
+$my-app-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $my-app-primary,
+      accent: $my-app-accent,
+      warn: $my-app-warn,
+    ),
+  )
+);
+
+@include mat.all-component-themes($my-app-theme);
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
